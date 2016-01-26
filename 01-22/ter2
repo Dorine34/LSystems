@@ -1,0 +1,31 @@
+
+# include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h> 
+#define TAILLE 1024
+char buf [1024];
+
+int main (int argc, char** argv){
+  
+    if (argc != 3){
+      write(1, "Nb arg doit etre egale à 3 !\n",30 );
+      return 1;
+    }
+    int s = open (argv[1], O_RDONLY);
+    if (s==-1){
+      write(1, "Fichier illisible\n",18 );
+      return 2;
+    }
+    int d = open (argv[2], O_CREAT|O_TRUNC|O_WRONLY, 0640);
+    if (d==-1){
+      write(1, "Fichier ininscriptible\n",23 );
+      return 3;
+    }
+
+    
+    int nblus;
+    while ( 0 != (nblus=read(s, buf, TAILLE)))
+      write (d, buf, nblus);
+  close (s);
+  close (d); 
+  }
