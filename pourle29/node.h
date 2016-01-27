@@ -13,7 +13,7 @@ class node
 {
 public:
   node();
-  node(long, long, long, char*, node*);
+  node(node*, long, long, long, char*);
   node(long, long, bool, char*, node*);
   ~node();
 
@@ -42,12 +42,13 @@ public:
   void setEnfants(std::vector<node*>*);
   std::vector<node*>* getEnfants();
 
-private:
+protected:
   bool dv;
   char* name;
   long x, y, inclinaison;
   node* pere;
   std::vector<node*> *enfants;
+  long angle;
 };
 
 #endif

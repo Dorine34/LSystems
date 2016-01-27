@@ -14,11 +14,17 @@ using namespace std;
 Objectifs : arbre dynamique donc tab dynamique -> actuellement arbre de taille k avec a rempli
 structure de données pour chaque feuille de l'arbre
 ******************/
-void reecriture(char* filename, char** tab, int k, node* racine);
-node* parcours(node* racine, node* n, int a, int niveauDemande, int niveauActuel);
-char* lireLigne(FILE *f);
-void lectureRegles(char *filename);
 
+/*
+void reecriture(char**tab, int k);
+*/
+
+void lectureRegles(char *filename);
+void createTreeUntilRank(vector<char> mots, vector<string> regles, node *noeud, int hauteur);
+void createTreeRankByRank(vector<char> mots, vector<string> regles);
+vector<node*> etage;
+vector<char> mots; // a corriger
+vector<string> regles; // a corriger
 
 int main(int argc, char** argv)
 {
@@ -50,172 +56,170 @@ int main(int argc, char** argv)
   fclose(pFile);
 
   lectureRegles(filename);
+
+  char motRacine = mots.at(0);
+  mots.erase(mots.begin());
+  char *tmpTab = new char[2];
+  tmpTab[0] = motRacine;
+  tmpTab[1] = '\0';
+
+  node* racine = new node(NULL, 612/2, 792/5, 90, tmpTab);
+  etage.push_back(racine);
+  //createTreeUntilRank(mots, regles, racine, 4);
+
   tab[0] = new char[(strlen(str) + 1) * sizeof(char)];
   strcpy(tab[0], str);
 
-  node* racine = new node(612/2, 792/5, (long)90, tab[0], NULL);
-
   char saisie[100];
   int rang = 1;
-
 
   cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
   cin >> saisie;
 
   while(strcmp(saisie, "quit") != 0)
   {
-//    reecriture(filename, tab, rang, racine);
     rang++;
+    createTreeRankByRank(mots, regles);
+    cout << etage.size() << endl;
     cout << endl << "Resultat : " << endl << endl;
-    for(int i = 0; i < rang; i++)
-    {
-//      cout << "rang " << i << " : " << tab[i] << endl;
-    }
+
     affichageGraphique(racine);
 
     cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
     cin >> saisie;
   }
-/*  for(int i = 0; i < rang; i++)
-  {
-    delete tab[i];
-  }
-*/  delete filename;
+  delete filename;
   return 0;
 }
 
-char* lireLigne(FILE *f) {
-  char c = fgetc(f);
-  char *line = NULL;
-  line = (char*) malloc(512 * sizeof(char));
-  if (line == NULL)
-    perror("memory");
-  int k = 0;
-  while (c != '.' && c != '\n' && c != '\0' && c != EOF) {
-    line[k] = c;
-    ++k;
-    c = fgetc(f);
-  }
-  if (k == 0) {
-    return NULL;
-  }
-  line[k] = '\0';
-  return line;
-}
-
 void lectureRegles(char *filename) {
-  FILE *file = fopen(filename, "r");
-  if (file == NULL) {
+  ifstream file(filename);
+  if (!file.is_open()) {
     perror("File not found");
   }
-  char *line = NULL;
-  vector<char> mots; // <3
-  vector<char*> regles;
-  while ((line = lireLigne(file)) != NULL) {
+  string line;
+  bool b = false;
+  while (getline(file, line)) {
     cout << line << endl;
-    /*for (int k = 0; line[k] != '\0'; ++k) {
+    b = false;
+    for (unsigned int k = 0; k < line.size(); ++k) {
       if (line[k] == '>') {
-        //char *l = new char[64]; // peut etre un peu con a voir apres
-        //strncpy(l, line, k - 1); // a verifier le -1
         mots.push_back(line[0]);
+        b = true;
       } else if (line[k] == '.') {
-        char *l = new char[64];
-        strncpy(l, line + 2, k - 2); // peut etre -3
-        regles.push_back(l);
+    	if (b) {
+			int beg = line.find('>') + 1;
+			regles.push_back(line.substr(beg, k - beg));
+    	} else {
+    		mots.push_back(line[0]);
+    	}
       }
-    }*/
+    }
   }
-  for (int k = 0; k < regles.size(); ++k) {
-    cout << mots.at(k) << "  ->  " << regles.at(k) << endl;
-
+  file.close();
+  for (unsigned int k = 0; k < mots.size(); ++k) {
+	cout << mots.at(k) << endl;
   }
-  fclose(file);
 }
 
+void createTreeUntilRank(vector<char> mots, vector<string> regles, node *racine, int hauteur) {
+	vector<node*> etage;
+	vector<node*> etageSuivant;
+	etage.push_back(racine);
+	for (int i = 0; i < hauteur; ++i) {
+		for (int j = 0; j < etage.size(); ++j) {
+			int index = 0;
+			for (int k = 0; k < mots.size(); ++k) {
+				if (mots.at(k) == etage.at(j)->getName()[0]) {
+					index = k;
+					break;
+				}
+			}
+      for (int k = 0; k < regles.at(index).size(); ++k) {
+				char *tmpTab = new char[2];
+				tmpTab[0] = regles.at(index).at(i);
+				tmpTab[1] = '\0';
+				node *enfant = new node(40, regles.at(index).at(i)=='a'? 40 : 60, !(regles.at(index).at(i) == 'a'), tmpTab, etage.at(j));
+				etageSuivant.push_back(enfant);
+				cout << regles.at(index).at(i) << "-";
+			}
+			cout << "   ";
+		}
+		cout << endl;
+		etage.clear();
+    for (int j = 0; j < etageSuivant.size(); ++j) {
+      etage.push_back(etageSuivant.at(j));
+    }
+		etageSuivant.clear();
+	}
+}
 
+void createTreeRankByRank(vector<char> mots, vector<string> regles) {
+	vector<node*> etageSuivant;
+  for (int i = 0; i < etage.size(); ++i) {
+		int index = 0;
+		for (unsigned int j = 0; j < mots.size(); ++j) {
+			if (mots.at(j) == etage.at(i)->getName()[0]) {
+				index = j;
+				break;
+			}
+		}
+		for (int j = 0; j < regles.at(index).size(); ++j) {
+			char *tmpTab = new char[2];
+			tmpTab[0] = regles.at(index).at(j);
+			tmpTab[1] = '\0';
+			node *enfant = new node(40, regles.at(index).at(j)=='a'? 40 : 60, !(regles.at(index).at(j) == 'a'), tmpTab, etage.at(i));
+			etageSuivant.push_back(enfant);
+			cout << regles.at(index).at(j) << "-";
+		}
+		cout << "   ";
+	}
+	cout << endl;
+	etage.clear();
+  for (int i = 0; i < etageSuivant.size(); ++i) {
+		etage.push_back(etageSuivant.at(i));
+	}
+}
 
-
-void reecriture(char* filename, char** tab, int k, node* racine)
+/*
+void reecriture (char**tab, int k)
 {
   char buff[1024];
-  cout << "boucle " << k << endl;
-  FILE* pFile;
-  int c, a, i = 0;
-  string str = tab[k - 1]; //etages enregistres 0 a, 1 ab, 2 aba ... k-1 = étage parent à celui demandé
+  cout<<"boucle "<<k<<endl;
+  FILE * pFile;
+  int c, a, i=0;
+  string str = tab[k-1];
   char bufferTest[1024];
-  strcpy(bufferTest, "");
+  strcpy (bufferTest,"");
 
-  long dist = 40;
-  long angle = 20;
-
-  int *mots;
-  string **regles;
-
-  while(str[i] != '\0')
-  {
-    a = str[i];
+  while (str[i]!= '\0'){
+    a=str[i];
     i++;
-    pFile = fopen(filename, "r");
-    if(pFile == NULL)
-    {
-      perror("Impossible d'ouvrir le fichier !");
-    }
+    pFile=fopen ("myfile.txt","r");
+    if (pFile==NULL) perror ("impossible d'ouvrir le fichier !");
     else
-    {
-      node* noeud_a_memoriser = racine;
-      int niveau = 0, fils = 0;
-      do
       {
-        c = fgetc(pFile);
-        if(c == a) // recherche de la regle pour a
-        {
-          c = fgetc(pFile);
-          if(c == '>')
-          {
-            c = fgetc(pFile); //ajout des elements a a
-            noeud_a_memoriser = parcours(racine, racine, a, k, niveau);
-            while(c != '.')
-            {
-//              noeud_a_memoriser->ajoutEnfant(new node((long)10, (long)20, true, tmp, noeud_a_memoriser));
-              int f = sprintf(buff, "%c",(char)c);
-              strcat(bufferTest, buff);
-              //cout <<  "buff = " << buff << " et buffTest = " << bufferTest << endl;
-              c = fgetc(pFile);
+        do {
+          c = fgetc (pFile);
+          if (c==a){
+            c = fgetc (pFile);
+            if (c == '>'){
+              c = fgetc (pFile);
+              while (c!='.'){
+                int f=sprintf(buff,"%c", (char)c);
+                strcat(bufferTest,buff);
+                //cout<< "buff="<<buff<<"et buffTest ="<<bufferTest<<endl;
+                c = fgetc (pFile);
             }
-            noeud_a_memoriser->setDV(true);
           }
         }
-        noeud_a_memoriser = racine;
-        racine->resetDV();
-      }while(c != EOF);
-      fclose(pFile);
+      } while (c != EOF);
+      fclose (pFile);
     }
   }
-  tab[k] = new char[strlen(bufferTest) + 1];
+  tab [k]= (char*)malloc(strlen(bufferTest)+1);
   strcpy(tab[k], bufferTest);
-  cout << "rang " << k << " = " << tab[k] << endl;
-  strcpy(bufferTest, "");
+  cout<<"rang"<<k<<" = "<<tab[k]<<endl;
+  strcpy (bufferTest,"");
 }
-
-node* parcours(node* racine, node* n, int a, int niveauDemande, int niveauActuel)
-{
-  n->setDV(true);
-  for(int i = 0; i < n->getEnfants()->size(); ++i)
-  {
-    if(!n->getEnfant(i)->getDV())
-    {
-      if(niveauDemande == niveauActuel && n->getName()[0] == (char)a)
-      {
-        n->setDV(false);
-        return n;
-      }
-      else
-      {
-        if (niveauActuel < niveauDemande)
-        {
-          return parcours(racine, n->getEnfant(i), a, niveauDemande, niveauActuel + 1);
-        }
-      }
-    }
-  }
-}
+*/
