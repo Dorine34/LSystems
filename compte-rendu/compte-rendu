@@ -4,3 +4,10 @@ Fait : premier jet du programme de base
 A faire : le programme bien et interactif
 Reflexions :parenthese/contexte/3D/stochastique
 Idee : concurrence entre arbres
+
+01-29
+Fait : arbre de creation d'un mot
+A faire : schéma tortue a partir du mot
+Reflexions : gestion des []+-
+             Blender : c>python> blender 
+idee : arbre apparente au jeu de la vie         
