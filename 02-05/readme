@@ -1,0 +1,6 @@
+TODO:
+mettre au propre
+passer le l'attribut name de node en string au lieu de char*
+faire des delete des fils dans le destructeur de node
+tests unitaire
+verifier memoire (new/delete)

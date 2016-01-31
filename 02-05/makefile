@@ -1,7 +1,7 @@
 CC = g++
-CFLAGS = -std=c++11 -g -Wall -ansi
+CFLAGS = -std=c++14 -g -Wall -ansi
 LDFLAGS =
-objects = ter2.o node.o 
+objects = ter3.o node.o afficheps.o 
 executable = ter1
 
 all: executable

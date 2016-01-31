@@ -1,0 +1,25 @@
+
+code a ameliorer : 
+  -rendre plus lisible : commenter
+  -enlever les variables statiques
+  -creer d autres fichiers types regles.h/regles.cpp
+  -utiliser des debuggers
+  -verifier la memoire
+  -virer des includes en trop
+  -permettre d entrer directement un rang 
+
+problemes (je vais essayer de les regler avant vendredi)
+  -avec les générations de sous-arbres dans des sous arbres (je n en suis pas sur, mais il me semble qu il y a des soucis)
+    20
+    X.
+    X=[+XX]-XX.
+
+  -avec les inclinaisons : le generateur ci-dessous devrait donner un octaedre au bout de 3 saisie
+    60. (je vais essayer de regler ce probleme ce week end ou durand cette semaine)
+    A.
+    A=B-A.
+    B=A-B.
+    hors, il ne donne qu un octaedre non ferme
+
+si on a le temps :on peut aussi regarder la difference si on utilise une pile a la place d un appel recursif lors du backtrack
+ (et on aura ainsi un joli graphe de comparaison du temps selon les differents types appeles)

@@ -8,17 +8,19 @@ node::node()
   setPere(NULL);
   this->enfants = new std::vector<node*>();
   this->name = NULL;
+  this->angle = 0;
 }
 
-node::node(long x, long y, long inclinaison, char* name, node *pere = NULL)
+node::node(node* pere, long x, long y, long inclinaison, char* name)
 {
+  this->angle = 0;
   if(pere != NULL)
   {
     pere->ajoutEnfant(this);
   }
   else
   {
-    this->pere = pere;
+    this->pere = NULL;
   }
   this->name = NULL;
   this->setName(name);
@@ -41,11 +43,14 @@ node::node(long distance, long angle, bool horaire, char* name, node* pere){
     {
       h = 1;
     }
+    this->pere = pere;
+    this->angle = angle;
+    this->angle -= 0.5 * (this->getPere()->angle);
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
-    setX(this->pere->getX() + distance * cos(PI * angle * direction / 180));
-    setY(this->pere->getY() + distance * sin(PI * angle * direction / 180));
-    setInclinaison(this->pere->getInclinaison() + angle * direction);
+    setX(this->pere->getX() + distance * cos(PI * this->angle * direction / 180));
+    setY(this->pere->getY() + distance * sin(PI * this->angle * direction / 180));
+    setInclinaison(this->pere->getInclinaison() + this->angle * direction);
     setDV(false);
     this->enfants = new std::vector<node*>();
     this->name = NULL;
@@ -96,11 +101,6 @@ void node::setDV(bool dv)
 char* node::getName()
 {
   return this->name;
-}
-
-
-int node::getSizeEnfant(){
-  return this->enfants->size();
 }
 
 void node::setName(char* name)

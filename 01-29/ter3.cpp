@@ -145,7 +145,6 @@ void createTreeUntilRank(vector<char> mots, vector<string> regles, node *racine,
 			}
 			cout << "   ";
 		}
-		cout << endl;
 		etage.clear();
     for (int j = 0; j < etageSuivant.size(); ++j) {
       etage.push_back(etageSuivant.at(j));
