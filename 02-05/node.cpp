@@ -13,6 +13,7 @@ node::node()
 
 node::node(node* pere, long x, long y, long inclinaison, char* name)
 {
+  std::cout<<"entree dans node ()"<<std::endl;
   this->angle = 0;
   if(pere != NULL)
   {
@@ -32,6 +33,7 @@ node::node(node* pere, long x, long y, long inclinaison, char* name)
 }
 
 node::node(long distance, long angle, bool horaire, char* name, node* pere){
+  
   if(pere != NULL)
   {
     int h;
@@ -45,7 +47,7 @@ node::node(long distance, long angle, bool horaire, char* name, node* pere){
     }
     this->pere = pere;
     this->angle = angle;
-    this->angle -= 0.5 * (this->getPere()->angle);
+    //this->angle -= 0.5 * (this->getPere()->angle);
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
     setX(this->pere->getX() + distance * cos(PI * this->angle * direction / 180));
@@ -55,21 +57,22 @@ node::node(long distance, long angle, bool horaire, char* name, node* pere){
     this->enfants = new std::vector<node*>();
     this->name = NULL;
     this->setName(name);
+//    std::cout<<"on a donc dans node(.....) : angle = "<<angle<<" et inclinaison = "<<inclinaison<<std::endl;
   }
   else
   {
-    std::cout << "Constructor failed, this->pere = " << this->pere;
+    std::cout << "Constructor failed, this->pere = " << this->pere<<std::endl;
   }
 }
 
 node::~node()
 {
-  if(this->name != NULL)
+ /* if(this->name != NULL)
   {
     delete this->name;
   }
   delete this->enfants;
-}
+*/}
 
 void node::ajoutEnfant(node* enfant)
 {

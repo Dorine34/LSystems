@@ -12,6 +12,7 @@
 
 void afficheVector(node *racine, std::ofstream* output)
 {
+  //std::cout<<"affichage graphique :"<<std::endl;
   if(racine->getEnfants()->size() > 0)
   {
     for(int k = 0; k < racine->getEnfants()->size(); ++k)
@@ -20,6 +21,7 @@ void afficheVector(node *racine, std::ofstream* output)
     }
   }
   *output << racine->getX() << " " << racine->getY() << " 3 0 360 arc" << std::endl;
+  //std::cout<<"boucle :x= "<<racine->getX()<<" et y= "<< racine->getY() <<std::endl;
   *output << "0 setgray" << std::endl;
   *output << "fill" << std::endl;
   *output << "stroke"<< std::endl;
@@ -44,12 +46,15 @@ void afficheEdge(node *racine, std::ofstream* output)
 
 void affichageGraphique(node* root)
 {
+
+ // std::cout<<"entree dans affiche vector 2"<<std::endl;
   std::cout << "Debut ecriture du .ps" << std::endl;
   std::ofstream output;
   output.open("arbre.ps",std::ios::out);
   output << "%!PS-Adobe-3.0" << std::endl;
   output << "%%BoundingBox: 0 0 612 792" << std::endl;
   output << std::endl;
+  //std::cout<<"root :x= "<<root->getX()<<" et y= "<< root->getY() <<std::endl;
   node* node = root;
   afficheVector(node, &output);
   output << std::endl;
