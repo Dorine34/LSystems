@@ -10,4 +10,14 @@ Fait : arbre de creation d'un mot
 A faire : schéma tortue a partir du mot
 Reflexions : gestion des []+-
              Blender : c>python> blender 
-idee : arbre apparente au jeu de la vie         
+idee : arbre apparente au jeu de la vie   
+
+02-05
+Fait : faire pousser des arbres en programmant, de type basique
+A faire : corriger erreur dans le backtrack (fait)
+        systeme de probabilité
+        possibilité plusieurs axiomes au debut
+        systeme de poids 
+        affichage à corriger
+        blender, commencer
+demander professeur : lien appels recursifs/pile plus en détail selon les segments code/pile/static/tas

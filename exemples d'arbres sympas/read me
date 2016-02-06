@@ -1,0 +1,5 @@
+Les exemples ont été verifiés avec : http://www.kevs3d.co.uk/dev/lsystems/
+et correspondent plus ou moins à l'affichage.
+
+Le "plus ou moins" est dû sans doute à l'utilisation des long a la place de double.
+Cependant, si on effactue le remplacement des long, on n'a plus aucun affichage(meme avec des float)

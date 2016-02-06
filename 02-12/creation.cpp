@@ -1,6 +1,6 @@
 #include "creation.h"
 
-
+/*********Permet de sauvegarder les regles**********/
 long lectureReglesF(char *filenameF, vector<char> *motsF, vector<string> *reglesF) { //permet de faciliter l acces aux regles
   long angle =0;
 
@@ -80,10 +80,19 @@ void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<st
       PreparationArbre(a.str(), angle);
 }
 
+/**************************
+* preparationArbre permet de mettre les elements en place pour la creation de l'arbre 
+*le principe consiste a assembler les bouts de mots pour obtenir le mot final
+*
+*m permet de se situer dans la lecture du mot
+*etageR correspond a un mot
+*on sauvegarde chaque etage de creaton du mot afin de pouvoir s'en servir si on veut creer un etage superieur
+*
+*************/
+
 void PreparationArbre(string a, long angle){//a represente une ligne de caracteres
     vector<node*> etageR;//etages dans la lecture du mot
-
-    //cout<<"entree dans preparationArbre"<<endl;
+    cout<<"entree dans preparationArbre"<<endl;
    int m=0;
    int cpt=0;
    while ((a[m])!='\0'){
@@ -98,13 +107,14 @@ void PreparationArbre(string a, long angle){//a represente une ligne de caracter
   tmp[0] = 'R';
   tmp[1] = '\0';
   node* racineR = new node(NULL, 50, 400, 90, tmp);
-  cout<<"inclinaison racineR : "<<racineR->getInclinaison()<<endl;
+//  cout<<"inclinaison racineR : "<<racineR->getInclinaison()<<endl;
   etageR.push_back(racineR);
   node* pere=racineR;
   node *enfant ;
   long inclinaison=0;
   //cout<<"etape4 franchie"<<endl;
     while ((a[m])!='\0'){
+  //    cout<<"avec m="<<m<<endl;
         if (((a[m] >64)&&(a[m] <91))||((a[m] >96)&&(a[m] <123)))
         {
           //cout<< " cas1 :a["<<m<<"]="<<a[m] <<" en int "<<(int)a[m]<<endl;
@@ -113,50 +123,65 @@ void PreparationArbre(string a, long angle){//a represente une ligne de caracter
           tmpTab[1] = '\0';
       
           enfant = new node(10, inclinaison,true, tmpTab,pere );
-//          cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
+    //      cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
           pere=enfant;
         }
         else {
           if (a[m]=='['){
-  //            cout<<"1er test inclinaison ="<<inclinaison<<endl;
+          //    cout<<"1er test inclinaison ="<<inclinaison<<endl;
               m= arbrePere(m, a, pere, angle,inclinaison);
             }
-          if(a[m]=='+'){inclinaison+= angle;
+          if(a[m]=='+'){inclinaison-= angle;
+          //  cout<<"l'inclinaison devient :"<<inclinaison<<endl;
            }
-          if(a[m]=='-'){inclinaison-= angle;
+          if(a[m]=='-'){inclinaison+= angle;
+          //  cout<<"l'inclinaison devient :"<<inclinaison<<endl;
           }
         }        
         m++;
-        
   }
   //cout<<"main :x= "<<racineR->getX()<<" et y= "<< racineR->getY() <<endl;
   affichageGraphique(racineR);
 }
 
+
+/**********************
+*arbre pere permet de creer l'arbre a partie d'un mot
+*chaque noeud de l'arbre a des caracteristiques spécifiqués héritées du mot
+*
+***********/
 int arbrePere(int m, string a, node* pere,long angle,long inclinaison){//dans les cas des []
- // cout<<"bienvenue dans arbre pere avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et angle ="<<angle<<endl;
+//  cout<<"bienvenue dans arbre pere avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et inclinaison ="<<inclinaison<<endl;
   m++;
   while ((a[m])!='\0'){
+//    cout<<"avec m="<<m<<endl;
+
+      if (a[m]==']'){ 
+//        cout<<"arret de arbrePere avec m="<<m<<endl;
+        return (m);}
       if (a[m]=='['){
-   //     cout<<"dans ce cas inclinaison ="<<inclinaison<<endl;
-       return (arbrePere(m, a, pere, angle, inclinaison));}
-      if(a[m]=='+'){ inclinaison +=angle;
-     //   cout<<"apres un +, l'inclinaison devient"<<inclinaison<<endl;
+//        cout<<"dans ce cas inclinaison ="<<inclinaison<<endl;
+       m= arbrePere(m, a, pere, angle, inclinaison);
+//       cout<<"retour de arbrePere avec m= "<<m<<endl;
+     }
+      if(a[m]=='+'){ inclinaison -=angle;
+//        cout<<"apres un +, l'inclinaison devient"<<inclinaison<<endl;
       }
-      if(a[m]=='-'){ inclinaison -=angle;
-       // cout<<"apres un -, l'inclinaison devient"<<inclinaison<<endl;
+      if(a[m]=='-'){ inclinaison +=angle;
+//        cout<<"apres un -, l'inclinaison devient"<<inclinaison<<endl;
       }
-      if (a[m]==']'){ return (m+1);}
       if (((a[m] >64)&&(a[m] <91))||((a[m] >96)&&(a[m] <123)))
         {
               char tmpTab[2];
               tmpTab[0] = a[m];
               tmpTab[1] = '\0';
               node *enfant = new node(10, inclinaison,true, tmpTab,pere );                 
-         //     cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
+//              cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
               pere=enfant;
         }
         m++;
     }
-    return m;
+//    cout<<"cas final"<<endl;
+    return m;// ne sert jamais
+
 }
