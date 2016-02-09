@@ -1,8 +1,8 @@
 #include "creation.h"
 
 /*********Permet de sauvegarder les regles**********/
-long lectureReglesF(char *filenameF, vector<char> *motsF, vector<string> *reglesF) { //permet de faciliter l acces aux regles
-  long angle =0;
+double lectureReglesF(char *filenameF, vector<char> *motsF, vector<string> *reglesF) { //permet de faciliter l acces aux regles
+  double angle =0;
 
   ifstream file(filenameF);
   if (!file.is_open()) {
@@ -37,7 +37,7 @@ long lectureReglesF(char *filenameF, vector<char> *motsF, vector<string> *regles
 }
 
 
-void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<string> *reglesF, long angle) {
+void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<string> *reglesF, double angle) {
   //cout<<"bienvenue dans le cas F"<<endl;
   ostringstream a;
    
@@ -90,7 +90,7 @@ void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<st
 *
 *************/
 
-void PreparationArbre(string a, long angle){//a represente une ligne de caracteres
+void PreparationArbre(string a, double angle){//a represente une ligne de caracteres
     vector<node*> etageR;//etages dans la lecture du mot
     cout<<"entree dans preparationArbre"<<endl;
    int m=0;
@@ -111,7 +111,7 @@ void PreparationArbre(string a, long angle){//a represente une ligne de caracter
   etageR.push_back(racineR);
   node* pere=racineR;
   node *enfant ;
-  long inclinaison=0;
+  double inclinaison=0;
   //cout<<"etape4 franchie"<<endl;
     while ((a[m])!='\0'){
   //    cout<<"avec m="<<m<<endl;
@@ -150,7 +150,7 @@ void PreparationArbre(string a, long angle){//a represente une ligne de caracter
 *chaque noeud de l'arbre a des caracteristiques spécifiqués héritées du mot
 *
 ***********/
-int arbrePere(int m, string a, node* pere,long angle,long inclinaison){//dans les cas des []
+int arbrePere(int m, string a, node* pere,double angle,double inclinaison){//dans les cas des []
 //  cout<<"bienvenue dans arbre pere avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et inclinaison ="<<inclinaison<<endl;
   m++;
   while ((a[m])!='\0'){

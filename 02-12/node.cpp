@@ -11,7 +11,7 @@ node::node()
   this->angle = 0;
 }
 
-node::node(node* pere, long x, long y, long inclinaison, char* name)
+node::node(node* pere, double x, double y, double inclinaison, char* name)
 {
   std::cout<<"entree dans node ()"<<std::endl;
   this->angle = 0;
@@ -32,7 +32,7 @@ node::node(node* pere, long x, long y, long inclinaison, char* name)
   this->enfants = new std::vector<node*>();
 }
 
-node::node(long distance, long angle, bool horaire, char* name, node* pere){
+node::node(double distance, double angle, bool horaire, char* name, node* pere){
   
   if(pere != NULL)
   {
@@ -123,31 +123,31 @@ void node::setName(char* name)
   }
 }
 
-long node::getX()
+double node::getX()
 {
   return this->x;
 }
 
-void node::setX(long x)
+void node::setX(double x)
 {
   this->x = x;
 }
 
-long node::getY(){
+double node::getY(){
   return this->y;
 }
 
-void node::setY(long y)
+void node::setY(double y)
 {
   this->y = y;
 }
 
-long node::getInclinaison()
+double node::getInclinaison()
 {
   return this->inclinaison;
 }
 
-void node::setInclinaison(long inclinaison)
+void node::setInclinaison(double inclinaison)
 {
   this->inclinaison = inclinaison;
 }

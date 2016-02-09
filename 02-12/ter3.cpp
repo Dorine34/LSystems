@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
   fclose(pFileF);
 
-  long angle =lectureReglesF(filenameF, &motsF, &reglesF);
+  double angle =lectureReglesF(filenameF, &motsF, &reglesF);
   
   char motRacineF = motsF.at(0);
   motsF.erase(motsF.begin());

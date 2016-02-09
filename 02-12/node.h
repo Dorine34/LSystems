@@ -13,8 +13,8 @@ class node
 {
 public:
   node();
-  node(node*, long, long, long, char*);
-  node(long, long, bool, char*, node*);
+  node(node*, double, double, double, char*);
+  node(double, double, bool, char*, node*);
   ~node();
 
   void ajoutEnfant(node*);
@@ -26,14 +26,14 @@ public:
   char* getName();
   void setName(char*);
 
-  long getX();
-  void setX(long);
+  double getX();
+  void setX(double);
 
-  long getY();
-  void setY(long);
+  double getY();
+  void setY(double);
 
-  long getInclinaison();
-  void setInclinaison(long);
+  double getInclinaison();
+  void setInclinaison(double);
 
   node* getPere();
   void setPere(node*);
@@ -45,10 +45,10 @@ public:
 protected:
   bool dv;
   char* name;
-  long x, y, inclinaison;
+  double x, y, inclinaison;
   node* pere;
   std::vector<node*> *enfants;
-  long angle;
+  double angle;
 };
 
 #endif

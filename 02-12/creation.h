@@ -14,8 +14,8 @@
 using namespace std;
 
 
-long lectureReglesF(char *filenameF,vector<char> *motsF, vector<string> *reglesF);//return angle
-void createTreeRankByRankF(vector<node*> *etageF, vector<char> *mots, vector<string> *regles, long angle);
-void PreparationArbre(string a, long angle);
-int arbrePere(int m, string a, node* pere, long angle, long inclinaison);
+double lectureReglesF(char *filenameF,vector<char> *motsF, vector<string> *reglesF);//return angle
+void createTreeRankByRankF(vector<node*> *etageF, vector<char> *mots, vector<string> *regles, double angle);
+void PreparationArbre(string a, double angle);
+int arbrePere(int m, string a, node* pere, double angle, double inclinaison);
 #endif
