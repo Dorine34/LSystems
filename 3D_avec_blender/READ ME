@@ -15,8 +15,6 @@ code a ameliorer :
   faire la liaison avec le code C++
   proposition :
     dans l'interface de notre addon ajouter un path pour le fichier de regle et un intervalle pour donner le nombre d'iteration appelant le programme C++ tel que "prog <path> <iter>" puis lire un fichier de notre propre serialisation
-  resolution :
-    obvious mais faisable qu'une fois finis
 
 problemes :
   pas de rendu possible pour le moment
