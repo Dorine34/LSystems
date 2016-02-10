@@ -1,0 +1,28 @@
+comment l'utiliser ?
+  version 2.76 minimum recommandee
+  placer son curseur sur la zone de texte a droite et appuyer soit sur Alt+P soit sur le bouton "Run Script" en bas
+  un onglet "TER" c'est rajoute sur la gauche ayant quelques fonctionnalites
+
+fonctionnalites actuelles :
+  automatique :
+    passe le moteur de rendus en cycles
+    interface d'ajout d'objets
+  en cas d'appel :
+    permet de generer soit un semblant d'arbre soit un cylindre different de celui par defaut
+    tous les objets crees sont supprimes a la creation d'un nouveau (uniquement pour pouvoir tester plus facilement)
+
+code a ameliorer :
+  faire la liaison avec le code C++
+  proposition :
+    dans l'interface de notre addon ajouter un path pour le fichier de regle et un intervalle pour donner le nombre d'iteration appelant le programme C++ tel que "prog <path> <iter>" puis lire un fichier de notre propre serialisation
+
+problemes :
+  pas de rendu possible pour le moment
+  cause :
+    edge = objet infiniment fin = objet invisible
+  resolution :
+    transformer les edges en cylindres/cones
+    soit autour de l'axe forme par les edges, soit pour les cylindres se servir des edges comme un des edges le formant
+
+exemples sympas :
+  NONE ATM

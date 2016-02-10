@@ -9,15 +9,23 @@ Idee : concurrence entre arbres
 Fait : arbre de creation d'un mot
 A faire : schéma tortue a partir du mot
 Reflexions : gestion des []+-
-             Blender : c>python> blender 
-idee : arbre apparente au jeu de la vie   
+             Blender : c>python> blender
+idee : arbre apparente au jeu de la vie
 
 02-05
 Fait : faire pousser des arbres en programmant, de type basique
 A faire : corriger erreur dans le backtrack (fait)
         systeme de probabilité
         possibilité plusieurs axiomes au debut
-        systeme de poids 
+        systeme de poids
         affichage à corriger
         blender, commencer
 demander professeur : lien appels recursifs/pile plus en détail selon les segments code/pile/static/tas
+
+02-09
+Idee : Utiliser la classe de rationnel developpee au cours de la programation lineaire pour obtenir des coordonnees les plus precises possible.
+
+(3D avec Blender)
+Fait : debut de script 3D (initialisation de scene, de moteur de rendu) interface simpliste
+A faire : chercher comment exporter le script
+        comment appeler le code C++ ? comment transferer les donnees de l'un a l'autre ?
