@@ -1,46 +1,90 @@
 #include "creation.h"
+/*************************/
+/* probleme arret non respecter
+/*
+/**************************/
 
+double puissanceMoins10(double x, int p){
+  for (int i=0; i<p; i++){
+    x=x*0.1;
+  }
+  return x;
+}
 /*********Permet de sauvegarder les regles**********/
-double lectureReglesF(char *filenameF, vector<char> *motsF, vector<string> *reglesF) { //permet de faciliter l acces aux regles
+double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *reglesP) { //permet de faciliter l acces aux regles
+  
+  int cpt =0;
   double angle =0;
-
+  double probabilite=0;
+  
   ifstream file(filenameF);
   if (!file.is_open()) {
     perror("File not found");
   }
+  
   string line;
   bool b = false;
+  
   while (getline(file, line)) {
     b = false;
+    
     for (unsigned int k = 0; k < line.size(); ++k) {
-      if ((line[k]>='0')&&(line[k]<='9')){
+      if ((line[k]>='0')&&(line[k]<='9')){//recupere la premiere donnee correspondant à l'angle
         angle=angle*10+line[k]-48;
       }
       else{
-      if (line[k] == '=') {
-        (*motsF).push_back(line[0]);
+      if (line[k] == '('){ //cas probabiliste qui commence par une parenthese
+        k++;
+        while (((line[k]>='0')&&(line[k]<='9'))||(line[k]==',')){
+          if (line[k]==',')k++;
+            probabilite=probabilite*10+line[k]-48;//recuperation de la probabilite en entier
+            cpt++;
+            k++;
+          }
+          probabilite =puissanceMoins10(probabilite, cpt-1);//probabilite en double
+          cout<<"La probabilite ="<<probabilite<<endl;
+          Probabilite p1(probabilite,"");//creation de probabilite
+          probabilite=0; cpt=0;
+          (*motsP).push_back(line[k+1]);
+          
+          while (line[k] != '.'){k++;}//pointeur dur la fin de la ligne
+          int deb = line.find('=') + 1;
+          p1.setString(line.substr(deb, k - deb));
+          (*reglesP).push_back(p1);
+      }
+      else{
+        if (line[k] == '=') {//cas normal, non probabiliste
+        (*motsP).push_back(line[0]);
         b = true;
-      } else if (line[k] == '.') {
+        } else if (line[k] == '.') {
                 if (b) {
                   int beg = line.find('=') + 1;
-                  (*reglesF).push_back(line.substr(beg, k - beg));
-                } else {
-                (*motsF).push_back(line[0]);
-                }
+                  Probabilite p1(1,line.substr(beg, k - beg));
+                  (*reglesP).push_back(p1);
+                } 
+              }
             }
           }
-      }
-  }
+        }
+    }
   file.close();
-  //cout<<"Fin de lectureReglesF"<<endl;
   return angle;
 }
 
 
-void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<string> *reglesF, double angle) {
-  //cout<<"bienvenue dans le cas F"<<endl;
+void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *motsP, vector<Probabilite> *reglesP) {
+  cout<<"bienvenue dans le cas F"<<endl;
   ostringstream a;
-   
+   /*for (int j =0; j<(*reglesP).size(); j++){
+      cout << "j="<< j<<" motsP="<<(*motsP)[j]<< " -> "<<(*reglesP)[j].getString()<< "de probabilite"<< (*reglesP)[j].getProbabilite()<<endl;
+    }
+*/
+  srand(time(NULL));
+  double r=rand()%(10)+1;
+  r=r/10;
+  //cout<<"la fonction random r="<<r<<endl;
+  double total=0;
+
   vector<node*> etageSuivant;
   char *tmpTab = new char[2];
 
@@ -50,27 +94,48 @@ void createTreeRankByRankF(vector<node*> *etageF, vector<char> *motsF, vector<st
         tmpTab[0] = x;
         tmpTab[1] = '\0';
         a<<x;
-
       node *enfant = new node(10, 60, false, tmpTab, (*etageF).at(i));
       etageSuivant.push_back(enfant);
       }
       else{
     int index = 0;
-    for (unsigned int j = 0; j < (*motsF).size(); ++j) {
-      if ((*motsF).at(j) == (*etageF).at(i)->getName()[0]) {
+    for (unsigned int j = 0; j < (*motsP).size(); ++j) {
+      //cout<<(*motsP).at(j)<<" correspond a "<<(*etageF).at(i)->getName()[0]<<endl;
+      if ((*motsP).at(j) == (*etageF).at(i)->getName()[0]) {
         index = j;
+    //    cout<<"Trouve ! avec j="<< j <<" motsP="<<(*motsP).at(j)<< " et " << (*etageF).at(i)->getName()[0]<< " ===>"<<(*reglesP).at(index).toString()<<endl;
         break;
       }
-    }    for (int j = 0; j < (*reglesF).at(index).size(); ++j) {
-      tmpTab[0] = (*reglesF).at(index).at(j);
-      tmpTab[1] = '\0';
-      a<<(*reglesF).at(index).at(j);
-      node *enfant = new node(40, (*reglesF).at(index).at(j)=='a'? 40 : 60, !((*reglesF).at(index).at(j) == 'a'), tmpTab, (*etageF).at(i));
-      etageSuivant.push_back(enfant);
+    } 
+    total=(*reglesP).at(index).getProbabilite();
+    int ctr=0;
+    //cout<<" ici1 "<<(*reglesP).at(index).toString()<<"r="<<r<< "et total="<<total<<endl;
+    while ((r>total)&&(ctr<10)){
+      ctr++;
+      //cout<<endl<<endl<<"Dans ce cas :"<< r<<">"<<total<<endl;  
+      total+=(*reglesP).at(index).getProbabilite();
+        for (unsigned int j = index+1; j < (*motsP).size(); ++j) {
+          if ((*motsP).at(j) == (*etageF).at(i)->getName()[0]) {
+          index = j;
+          break;
+        }
       }
     }
-    cout << "   ";
+    if (ctr !=10){
+        for (unsigned int j = 0; j < (*reglesP).at(index).getString().size(); ++j) {  
+            tmpTab[0] = (*reglesP).at(index).getString().at(j);
+        //    cout<< " le truc bizarre devient :"<< (*reglesP).at(index).getString().at(j)<< "venant de "<<(*reglesP).at(index).getString()<<endl;
+            tmpTab[1] = '\0';
+            a<<(*reglesP).at(index).getString().at(j);
+            node *enfant = new node(40, (*reglesP).at(index).getString().at(j)=='a'? 40 : 60, !((*reglesP).at(index).getString().at(j) == 'a'), tmpTab, (*etageF).at(i));
+            etageSuivant.push_back(enfant);
+        }  
+      }
+      cout << "   ";
     }
+    r=rand()%(10)+1;
+    r=r/10;
+  }
     cout << endl;
     (*etageF).clear();
     for (int i = 0; i < etageSuivant.size(); ++i) {

@@ -12,26 +12,30 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>//pour le graphe
-#include<sstream>
+#include <sstream>
 
 #include "node.h"
 #include "afficheps.h"
 #include "creation.h"
-
+#include "probabilite.h"
 using namespace std;
  
 
 int main(int argc, char** argv)
 {
-  vector<string> reglesF; //les regles a respecter
-  vector<node*> etageF;//etages selon le rang de creation du mot
-  vector<char> motsF;//les mots formes
   cout <<  "Bonjour camarades !" << endl;//message de convivialité (parce que c'est important la convivialite)
+  
+  vector<node*> etageF;//etages selon le rang de creation du mot
+  vector<Probabilite> reglesP;// contraintes rangees par domaine
+  vector<char> motsP;//les mots formes a partir de probabilite
+
   char* tabF[100];//recupere les regles
   char strF[80];//buffer pour les string
+  
   char* filenameF = new char[11 * sizeof(char)];
   sprintf(filenameF, "generateur.txt");
 
+/**ouverture du fichier**/
   FILE* pFileF;
   if(argc == 2)
   {
@@ -53,10 +57,21 @@ int main(int argc, char** argv)
 
   fclose(pFileF);
 
-  double angle =lectureReglesF(filenameF, &motsF, &reglesF);
-  
-  char motRacineF = motsF.at(0);
-  motsF.erase(motsF.begin());
+  double angle =lectureReglesF(filenameF, &motsP, &reglesP);
+  /*
+  for (int j =0; j<reglesP.size(); j++){
+      cout << "j="<< j<<" motsP="<<motsP[j]<< " -> "<<reglesP[j].getString()<< "de probabilite"<< reglesP[j].getProbabilite()<<endl;
+    }
+*/
+  char motRacineF = motsP.at(0);
+  //motsP.erase(motsP.begin());
+  /*
+  cout<<"2nd essai"<<endl;
+  for (int j =0; j<reglesP.size(); j++){
+      cout << "j="<< j<<" motsP="<<motsP[j]<< " -> "<<reglesP[j].getString()<< "de probabilite"<< reglesP[j].getProbabilite()<<endl;
+    }
+*/
+
   char *tmpTabF = new char[2];
   tmpTabF[0] = motRacineF;
   tmpTabF[1] = '\0';
@@ -64,7 +79,6 @@ int main(int argc, char** argv)
   
   node* racineF = new node(NULL, 500, 500, 90, tmpTabF);//sert actuellement a rien
   etageF.push_back(racineF);
-  
   tabF[0] = new char[(strlen(strF) + 1) * sizeof(char)];
   strcpy(tabF[0], strF);
   char saisie[100];
@@ -79,13 +93,13 @@ int main(int argc, char** argv)
     cout<<s<<endl;
     for (int i=0; i<s;i++){ 
       cout << endl << "Resultat : " << endl << endl;
-      createTreeRankByRankF(&etageF,&motsF, &reglesF, angle);//la creation en soit de l'arbre qui donnera le mot
+      createTreeRankByRankF(&etageF, angle, &motsP, &reglesP);//la creation en soit de l'arbre qui donnera le mot
     }
     cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
     cin >> saisie;
     }
     else{//cas etage par etage
-      createTreeRankByRankF(&etageF,&motsF, &reglesF, angle);//la creation en soit
+      createTreeRankByRankF(&etageF, angle, &motsP, &reglesP);//la creation en soit
       cout << endl << "Resultat : " << endl ;
       cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
       cin >> saisie;}
