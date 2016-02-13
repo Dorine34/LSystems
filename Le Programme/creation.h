@@ -15,7 +15,7 @@
 using namespace std;
 
 
-double lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *reglesP);//return angle
+void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *reglesP, double *angle, string *axiomeDeBase);//return angle
 void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *motsP, vector<Probabilite> *reglesP);
 void PreparationArbre(string a, double angle);
 int arbrePere(int m, string a, node* pere, double angle, double inclinaison);

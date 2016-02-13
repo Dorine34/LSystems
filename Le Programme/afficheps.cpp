@@ -37,6 +37,7 @@ void afficheEdge(node *racine, std::ofstream* output)
   }
   for(int i = 0; i < racine->getEnfants()->size(); ++i)
   {
+    //std::cout<<racine->getName()<< " x = "<<racine->getY()<< " et y = "<<racine->getX()<<std::endl;
     *output << lround(racine->getY()) << " " << lround(racine->getX()) << " moveto" << std::endl;
     *output << lround(racine->getEnfants()->at(i)->getY()) << " " << lround(racine->getEnfants()->at(i)->getX()) << " lineto" << std::endl;
     *output << "stroke" << std::endl;

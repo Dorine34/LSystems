@@ -29,3 +29,12 @@ Idee : Utiliser la classe de rationnel developpee au cours de la programation li
 Fait : debut de script 3D (initialisation de scene, de moteur de rendu) interface simpliste
 A faire : chercher comment exporter le script
         comment appeler le code C++ ? comment transferer les donnees de l'un a l'autre ?
+
+02-12
+Fait : l'arbre avec un affichage precis + bugs reparés
+
+A faire : avancer blender
+          centrer l'affichage
+          commencer la 3D
+
+

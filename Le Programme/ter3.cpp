@@ -57,28 +57,94 @@ int main(int argc, char** argv)
 
   fclose(pFileF);
 
-  double angle =lectureReglesF(filenameF, &motsP, &reglesP);
-  /*
+  string axiomeDeBase;
+  double angle;
+  lectureReglesF(filenameF, &motsP, &reglesP, &angle, &axiomeDeBase);
+/*
+  cout<<endl<<"tableau enregistre :"<<endl;
   for (int j =0; j<reglesP.size(); j++){
       cout << "j="<< j<<" motsP="<<motsP[j]<< " -> "<<reglesP[j].getString()<< "de probabilite"<< reglesP[j].getProbabilite()<<endl;
     }
 */
-  char motRacineF = motsP.at(0);
-  //motsP.erase(motsP.begin());
-  /*
-  cout<<"2nd essai"<<endl;
-  for (int j =0; j<reglesP.size(); j++){
-      cout << "j="<< j<<" motsP="<<motsP[j]<< " -> "<<reglesP[j].getString()<< "de probabilite"<< reglesP[j].getProbabilite()<<endl;
-    }
-*/
-
+  //cout<<"axiome de base= "<<axiomeDeBase<<"de taille :"<<axiomeDeBase.size()<<endl;
+  char motRacineF;
+  node* racineF;
+  node *racine;
+  if (axiomeDeBase.size()==1){
+  motRacineF = axiomeDeBase[0];
+  
   char *tmpTabF = new char[2];
   tmpTabF[0] = motRacineF;
   tmpTabF[1] = '\0';
-  cout<<"mot tmp = "<<tmpTabF<<endl;
+  //cout<<"mot tmp = "<<tmpTabF<<endl;
   
   node* racineF = new node(NULL, 500, 500, 90, tmpTabF);//sert actuellement a rien
   etageF.push_back(racineF);
+  
+  }
+  else {
+    motRacineF = 'R';
+    char *tmpTabF = new char[2];
+    tmpTabF[0] = motRacineF;
+    tmpTabF[1] = '\0';
+   // cout<<"mot tmp = "<<tmpTabF<<endl;
+    racineF = new node(NULL, 500, 500, 90, tmpTabF);
+    etageF.push_back(racineF);
+    if (axiomeDeBase.size() != 1){//cas ou l axiome de base est multiple, on cree ici le premier etage
+      etageF.pop_back();
+      char*nom=(char *) malloc(axiomeDeBase.size());
+      node*pere=racineF;
+      node*enfant;
+      int m=0;
+      int n=0;
+      int inclinaison=0;
+      while(n<axiomeDeBase.size()){
+        nom[m]=axiomeDeBase[n];
+        //cout<<"nom[m]= "<<nom[m]<<endl;
+        if (((nom[m] >64)&&(nom[m] <91))||((nom[m] >96)&&(nom[m] <123)))
+        {
+          nom[m+1]='\0'; m=-1;
+          enfant = new node(10, inclinaison,true, nom,pere );
+          //cout<<"nom de l'enfant"<<nom<<"nom du pere : "<<pere->getName()<<endl;
+          pere=enfant;
+          etageF.push_back(enfant);
+        }
+        else {
+          if (nom[m]=='['){
+  //            cout<<"1er test inclinaison ="<<inclinaison<<endl;
+              m= arbrePere(m, nom, pere, angle,inclinaison);
+            }
+          if(nom[m]=='+'){inclinaison-= angle;
+             // cout<<"l'inclinaison devient :"<<inclinaison<<endl;
+           }
+          if(nom[m]=='-'){inclinaison+= angle;
+            //cout<<"l'inclinaison devient :"<<inclinaison<<endl;
+          }
+
+          nom[m+1]='\0'; m=-1;
+          enfant = new node(10, inclinaison,true, nom,pere );
+          //cout<<"nom de l'enfant"<<nom<<"nom du pere : "<<pere->getName()<<endl;
+          pere=enfant;
+          etageF.push_back(enfant);
+        }        
+        m++;
+        n++;
+      }
+      nom[axiomeDeBase.size()+1]='\0';
+    //  cout<<"le nom est :"<<nom<<endl;
+      node *racine = new node(10, angle, true, nom, racineF);
+      //etageF.push_back(racine);
+      free(nom);
+    }
+  }
+  /*cout<<"etageF="<<endl;
+  for (int i=0; i<etageF.size();i++){
+    cout<<etageF.at(i)->getName()<< " x= " <<etageF.at(i)->getX()<< " y="<<etageF.at(i)->getY()<<endl;
+  }
+  */
+  //cout<<" rajout de "<<axiomeDeBase[0];
+   affichageGraphique(etageF.at(0));
+
   tabF[0] = new char[(strlen(strF) + 1) * sizeof(char)];
   strcpy(tabF[0], strF);
   char saisie[100];

@@ -11,11 +11,19 @@ double puissanceMoins10(double x, int p){
   return x;
 }
 /*********Permet de sauvegarder les regles**********/
-double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *reglesP) { //permet de faciliter l acces aux regles
-  
+/**
+reglesP : les regles de construction
+angle : l'angle de rotation
+axiome de base : le premier axiome
+
+**/
+void lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *reglesP, double *angle, string *axiomeDeBase) { //permet de faciliter l acces aux regles
+//cout<<"bienvene dans lectureReglesF"<<endl;  
   int cpt =0;
-  double angle =0;
+  *angle =0;
+  *axiomeDeBase= "";
   double probabilite=0;
+
   
   ifstream file(filenameF);
   if (!file.is_open()) {
@@ -24,16 +32,18 @@ double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *
   
   string line;
   bool b = false;
-  
+  bool premierAxiome=false;
+
   while (getline(file, line)) {
     b = false;
-    
     for (unsigned int k = 0; k < line.size(); ++k) {
+      //cout<<" au debut line [k]="<<line[k]<<endl;
       if ((line[k]>='0')&&(line[k]<='9')){//recupere la premiere donnee correspondant à l'angle
-        angle=angle*10+line[k]-48;
+        *angle=(*angle)*10+line[k]-48;
       }
       else{
       if (line[k] == '('){ //cas probabiliste qui commence par une parenthese
+  //      cout<<"cas probabiliste"<<endl;
         k++;
         while (((line[k]>='0')&&(line[k]<='9'))||(line[k]==',')){
           if (line[k]==',')k++;
@@ -42,10 +52,11 @@ double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *
             k++;
           }
           probabilite =puissanceMoins10(probabilite, cpt-1);//probabilite en double
-          cout<<"La probabilite ="<<probabilite<<endl;
+    //      cout<<"La probabilite ="<<probabilite<<endl;
           Probabilite p1(probabilite,"");//creation de probabilite
           probabilite=0; cpt=0;
           (*motsP).push_back(line[k+1]);
+          //cout<<"cas  () rajout de "<<line[k+1]<<endl;
           
           while (line[k] != '.'){k++;}//pointeur dur la fin de la ligne
           int deb = line.find('=') + 1;
@@ -54,8 +65,9 @@ double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *
       }
       else{
         if (line[k] == '=') {//cas normal, non probabiliste
-        (*motsP).push_back(line[0]);
-        b = true;
+          (*motsP).push_back(line[0]);
+          //cout<<"cas  = rajout de "<<line[0]<<endl;
+          b = true;
         } else if (line[k] == '.') {
                 if (b) {
                   int beg = line.find('=') + 1;
@@ -63,17 +75,24 @@ double lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *
                   (*reglesP).push_back(p1);
                 } 
               }
-            }
-          }
-        }
+              if (!premierAxiome){
+                premierAxiome=true;
+                  while (line[k] != '.'){k++;}//pointeur dur la fin de la ligne
+            //      cout<<"axiome de base ="<<line.substr(0, k);
+                  *axiomeDeBase=line.substr(0, k);
+          //        cout<<"la ligne oubliee selon 1 est"<<line<<endl; 
+              }
+            }      //cout<<"la ligne oubliee selon 2 est"<<line<<endl;
+          }        //cout<<"la ligne oubliee selon 3 est"<<line<<endl;
+        }         //cout<<"la ligne oubliee selon  4 est"<<line<<endl;
     }
+  //cout<<"fin lecture reglesF"<<endl;
   file.close();
-  return angle;
 }
 
 
 void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *motsP, vector<Probabilite> *reglesP) {
-  cout<<"bienvenue dans le cas F"<<endl;
+  cout<<"bienvenue dans le createTreeRankByRankF"<<endl;
   ostringstream a;
    /*for (int j =0; j<(*reglesP).size(); j++){
       cout << "j="<< j<<" motsP="<<(*motsP)[j]<< " -> "<<(*reglesP)[j].getString()<< "de probabilite"<< (*reglesP)[j].getProbabilite()<<endl;
@@ -90,7 +109,10 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
 
   for (int i = 0; i < (*etageF).size(); ++i) {
      char x= (*etageF).at(i)->getName()[0];
+
+     //cout<<"etape1 : x correspond a"<<(*etageF).at(i)->getName()<<endl;
       if ((x=='[')||(x==']')||(x=='+')||(x=='-')){
+       // cout<<"etape2"<<endl;
         tmpTab[0] = x;
         tmpTab[1] = '\0';
         a<<x;
@@ -98,30 +120,39 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
       etageSuivant.push_back(enfant);
       }
       else{
-    int index = 0;
+      //cout<<"etape2a"<<endl;
+    int index = -1;
     for (unsigned int j = 0; j < (*motsP).size(); ++j) {
+      //cout<<"etape3"<<endl;
       //cout<<(*motsP).at(j)<<" correspond a "<<(*etageF).at(i)->getName()[0]<<endl;
       if ((*motsP).at(j) == (*etageF).at(i)->getName()[0]) {
         index = j;
-    //    cout<<"Trouve ! avec j="<< j <<" motsP="<<(*motsP).at(j)<< " et " << (*etageF).at(i)->getName()[0]<< " ===>"<<(*reglesP).at(index).toString()<<endl;
+        //cout<<"Trouve ! avec j="<< j <<" motsP="<<(*motsP).at(j)<< " et " << (*etageF).at(i)->getName()[0]<< " ===>"<<(*reglesP).at(index).toString()<<endl;
         break;
       }
     } 
+    if(index !=-1){//dans ce cas, il n y a pas de regles correspondant
+    //  cout<<"Non Trouve ! avec"<<" motsP="<<(*motsP).at(index)<< " et " << (*etageF).at(i)->getName()[0]<< " ===>"<<(*reglesP).at(index).toString()<<endl;
+
     total=(*reglesP).at(index).getProbabilite();
     int ctr=0;
-    //cout<<" ici1 "<<(*reglesP).at(index).toString()<<"r="<<r<< "et total="<<total<<endl;
+    //cout<<" ici "<<(*reglesP).at(index).toString()<<" r= "<<r<< "et total="<<total<<endl;
     while ((r>total)&&(ctr<10)){
+    //  cout<<"etape5"<<endl;
       ctr++;
-      //cout<<endl<<endl<<"Dans ce cas :"<< r<<">"<<total<<endl;  
-      total+=(*reglesP).at(index).getProbabilite();
         for (unsigned int j = index+1; j < (*motsP).size(); ++j) {
           if ((*motsP).at(j) == (*etageF).at(i)->getName()[0]) {
           index = j;
+      //    cout<<endl<<"Dans ce cas :"<< r<<">"<<total;  
+          total+=(*reglesP).at(index).getProbabilite();
+      //    cout<< " et total devient :"<<total<< "car on lui a rajoute"<<(*reglesP).at(index).getProbabilite()<<endl;
+      //    cout<<"le nouvel index devient :"<<(*reglesP).at(index).toString()<<"r="<<r<< "et total="<<total<<endl;
           break;
         }
       }
     }
     if (ctr !=10){
+      //cout<<"etape6"<<endl;
         for (unsigned int j = 0; j < (*reglesP).at(index).getString().size(); ++j) {  
             tmpTab[0] = (*reglesP).at(index).getString().at(j);
         //    cout<< " le truc bizarre devient :"<< (*reglesP).at(index).getString().at(j)<< "venant de "<<(*reglesP).at(index).getString()<<endl;
@@ -133,6 +164,16 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
       }
       cout << "   ";
     }
+    else {
+      //cout<<"etape7"<<endl;
+            tmpTab[0] = (*etageF).at(i)->getName()[0];
+            //    cout<< " le truc bizarre devient :"<< (*reglesP).at(index).getString().at(j)<< "venant de "<<(*reglesP).at(index).getString()<<endl;
+            tmpTab[1] = '\0';
+            a<<(*etageF).at(i)->getName()[0];
+            node *enfant = new node(40,(*etageF).at(i)->getInclinaison(), true, tmpTab, (*etageF).at(i)->getPere());
+            etageSuivant.push_back(enfant);
+    }
+  }
     r=rand()%(10)+1;
     r=r/10;
   }
@@ -143,6 +184,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
     }
       cout<< " a = "<< a.str()<<endl;
       PreparationArbre(a.str(), angle);
+//cout<<"au revoir de createTreeRankByRankF"<<endl;
 }
 
 /**************************
@@ -157,7 +199,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
 
 void PreparationArbre(string a, double angle){//a represente une ligne de caracteres
     vector<node*> etageR;//etages dans la lecture du mot
-    cout<<"entree dans preparationArbre"<<endl;
+  //  cout<<"entree dans preparationArbre"<<endl;
    int m=0;
    int cpt=0;
    while ((a[m])!='\0'){
@@ -186,8 +228,9 @@ void PreparationArbre(string a, double angle){//a represente une ligne de caract
           char tmpTab[2];
           tmpTab[0] = a[m];
           tmpTab[1] = '\0';
-      
+        
           enfant = new node(10, inclinaison,true, tmpTab,pere );
+        //  cout<<"nom de l'enfant"<<tmpTab<<"nom du pere : "<<pere->getName()<<endl;
     //      cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
           pere=enfant;
         }
@@ -207,6 +250,7 @@ void PreparationArbre(string a, double angle){//a represente une ligne de caract
   }
   //cout<<"main :x= "<<racineR->getX()<<" et y= "<< racineR->getY() <<endl;
   affichageGraphique(racineR);
+//cout<<"arbre prepare !"<<endl;
 }
 
 
