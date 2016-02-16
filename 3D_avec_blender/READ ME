@@ -8,13 +8,16 @@ fonctionnalites actuelles :
     passe le moteur de rendus en cycles
     interface d'ajout d'objets
   en cas d'appel :
+    permet de saisir un path (pour le fichier de regles)
+    permet de choisir le nombre d'iterations
     permet de generer soit un semblant d'arbre soit un cylindre different de celui par defaut
     tous les objets crees sont supprimes a la creation d'un nouveau (uniquement pour pouvoir tester plus facilement)
 
 code a ameliorer :
-  faire la liaison avec le code C++
+  finir la liaison avec le code C++
   proposition :
-    dans l'interface de notre addon ajouter un path pour le fichier de regle et un intervalle pour donner le nombre d'iteration appelant le programme C++ tel que "prog <path> <iter>" puis lire un fichier de notre propre serialisation
+    appeler le programme C++ tel que "prog <path> <iter>" puis lire un fichier de notre propre serialisation
+    "prog <path>" appele pour le moment - cause des crash car attente de saisie
 
 problemes :
   pas de rendu possible pour le moment
