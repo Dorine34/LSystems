@@ -13,14 +13,14 @@ double puissanceMoins10(double x, int p){
 /*********Permet de sauvegarder les regles**********/
 /**
 reglesP : les regles de construction
-angle : l'angle de rotation
+angleXY : l'angleXY de rotation
 axiome de base : le premier axiome
 
 **/
-void lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *reglesP, double *angle, string *axiomeDeBase) { //permet de faciliter l acces aux regles
+void lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *reglesP, double *angleXY, double *angleZ, string *axiomeDeBase) { //permet de faciliter l acces aux regles
 //cout<<"bienvene dans lectureReglesF"<<endl;  
   int cpt =0;
-  *angle =0;
+  *angleXY =0;
   *axiomeDeBase= "";
   double probabilite=0;
 
@@ -33,14 +33,19 @@ void lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *re
   string line;
   bool b = false;
   bool premierAxiome=false;
-
+  bool angleXYfait=false;
   while (getline(file, line)) {
     b = false;
     for (unsigned int k = 0; k < line.size(); ++k) {
       //cout<<" au debut line [k]="<<line[k]<<endl;
-      if ((line[k]>='0')&&(line[k]<='9')){//recupere la premiere donnee correspondant à l'angle
-        *angle=(*angle)*10+line[k]-48;
+      if (!angleXYfait){
+      if ((line[k]>='0')&&(line[k]<='9'))//recupere la premiere donnee correspondant à l'angleXYXY
+        *angleXY=(*angleXY)*10+line[k]-48;
+      if (line[k]==' '){angleXYfait=true;}
       }
+      else {  
+        if ((line[k]>='0')&&(line[k]<='9'))//recupere la premiere donnee correspondant à l'angleXYXY
+            *angleZ=(*angleZ)*10+line[k]-48;
       else{
       if (line[k] == '('){ //cas probabiliste qui commence par une parenthese
   //      cout<<"cas probabiliste"<<endl;
@@ -86,12 +91,13 @@ void lectureReglesF(char *filenameF,vector<char> *motsP, vector<Probabilite> *re
           }        //cout<<"la ligne oubliee selon 3 est"<<line<<endl;
         }         //cout<<"la ligne oubliee selon  4 est"<<line<<endl;
     }
+  }
   //cout<<"fin lecture reglesF"<<endl;
   file.close();
 }
 
 
-void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *motsP, vector<Probabilite> *reglesP) {
+void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ, vector<char> *motsP, vector<Probabilite> *reglesP) {
   cout<<"bienvenue dans le createTreeRankByRankF"<<endl;
   ostringstream a;
    /*for (int j =0; j<(*reglesP).size(); j++){
@@ -116,7 +122,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
         tmpTab[0] = x;
         tmpTab[1] = '\0';
         a<<x;
-      node *enfant = new node(10, 60, false, tmpTab, (*etageF).at(i));
+      node *enfant = new node(10, 60,60, false, tmpTab, (*etageF).at(i));
       etageSuivant.push_back(enfant);
       }
       else{
@@ -124,7 +130,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
     int index = -1;
     for (unsigned int j = 0; j < (*motsP).size(); ++j) {
       //cout<<"etape3"<<endl;
-      //cout<<(*motsP).at(j)<<" correspond a "<<(*etageF).at(i)->getName()[0]<<endl;
+      //cout<<(*motsP).at(j)<<" correspond a  "<<(*etageF).at(i)->getName()[0]<<endl;
       if ((*motsP).at(j) == (*etageF).at(i)->getName()[0]) {
         index = j;
         //cout<<"Trouve ! avec j="<< j <<" motsP="<<(*motsP).at(j)<< " et " << (*etageF).at(i)->getName()[0]<< " ===>"<<(*reglesP).at(index).toString()<<endl;
@@ -158,7 +164,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
         //    cout<< " le truc bizarre devient :"<< (*reglesP).at(index).getString().at(j)<< "venant de "<<(*reglesP).at(index).getString()<<endl;
             tmpTab[1] = '\0';
             a<<(*reglesP).at(index).getString().at(j);
-            node *enfant = new node(40, (*reglesP).at(index).getString().at(j)=='a'? 40 : 60, !((*reglesP).at(index).getString().at(j) == 'a'), tmpTab, (*etageF).at(i));
+            node *enfant = new node(40, (*reglesP).at(index).getString().at(j)=='a'? 40 : 60, 60, !((*reglesP).at(index).getString().at(j) == 'a'), tmpTab, (*etageF).at(i));
             etageSuivant.push_back(enfant);
         }  
       }
@@ -170,7 +176,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
             //    cout<< " le truc bizarre devient :"<< (*reglesP).at(index).getString().at(j)<< "venant de "<<(*reglesP).at(index).getString()<<endl;
             tmpTab[1] = '\0';
             a<<(*etageF).at(i)->getName()[0];
-            node *enfant = new node(40,(*etageF).at(i)->getInclinaison(), true, tmpTab, (*etageF).at(i)->getPere());
+            node *enfant = new node(40,(*etageF).at(i)->getInclinaisonXY(),(*etageF).at(i)->getInclinaisonZ(), true, tmpTab, (*etageF).at(i)->getPere());
             etageSuivant.push_back(enfant);
     }
   }
@@ -183,7 +189,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
       (*etageF).push_back(etageSuivant.at(i));
     }
       cout<< " a = "<< a.str()<<endl;
-      PreparationArbre(a.str(), angle);
+      PreparationArbre(a.str(), angleXY, angleZ);
 //cout<<"au revoir de createTreeRankByRankF"<<endl;
 }
 
@@ -197,7 +203,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angle, vector<char> *mo
 *
 *************/
 
-void PreparationArbre(string a, double angle){//a represente une ligne de caracteres
+void PreparationArbre(string a, double angleXY,double angleZ){//a represente une ligne de caracteres
     vector<node*> etageR;//etages dans la lecture du mot
   //  cout<<"entree dans preparationArbre"<<endl;
    int m=0;
@@ -213,12 +219,13 @@ void PreparationArbre(string a, double angle){//a represente une ligne de caract
   char *tmp = new char[2];
   tmp[0] = 'R';
   tmp[1] = '\0';
-  node* racineR = new node(NULL, 50, 400, 90, tmp);
-//  cout<<"inclinaison racineR : "<<racineR->getInclinaison()<<endl;
+  node* racineR = new node(NULL, 50, 50, 400, 90,0, tmp);
+//  cout<<"inclinaisonXY racineR : "<<racineR->getInclinaisonXY()<<endl;
   etageR.push_back(racineR);
   node* pere=racineR;
   node *enfant ;
-  double inclinaison=0;
+  double inclinaisonXY=0;
+  double inclinaisonZ=0;
   //cout<<"etape4 franchie"<<endl;
     while ((a[m])!='\0'){
   //    cout<<"avec m="<<m<<endl;
@@ -229,21 +236,21 @@ void PreparationArbre(string a, double angle){//a represente une ligne de caract
           tmpTab[0] = a[m];
           tmpTab[1] = '\0';
         
-          enfant = new node(10, inclinaison,true, tmpTab,pere );
+          enfant = new node(10, inclinaisonXY, inclinaisonZ, true, tmpTab,pere );
         //  cout<<"nom de l'enfant"<<tmpTab<<"nom du pere : "<<pere->getName()<<endl;
-    //      cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
+    //      cout<<" inclinaisonXY enfant "<<m<<" : "<<enfant->getInclinaisonXY()<<"avec pere d'une inclinaisonXY de "<<pere->getInclinaisonXY()<<" et a[m]="<<a[m]<<endl;
           pere=enfant;
         }
         else {
           if (a[m]=='['){
-          //    cout<<"1er test inclinaison ="<<inclinaison<<endl;
-              m= arbrePere(m, a, pere, angle,inclinaison);
+          //    cout<<"1er test inclinaisonXY ="<<inclinaisonXY<<endl;
+              m= arbrePere(m, a, pere, angleXY,inclinaisonXY,angleZ,inclinaisonZ);
             }
-          if(a[m]=='+'){inclinaison-= angle;
-          //  cout<<"l'inclinaison devient :"<<inclinaison<<endl;
+          if(a[m]=='+'){inclinaisonXY-= angleXY;
+          //  cout<<"l'inclinaisonXY devient :"<<inclinaisonXY<<endl;
            }
-          if(a[m]=='-'){inclinaison+= angle;
-          //  cout<<"l'inclinaison devient :"<<inclinaison<<endl;
+          if(a[m]=='-'){inclinaisonXY+= angleXY;
+          //  cout<<"l'inclinaisonXY devient :"<<inclinaisonXY<<endl;
           }
         }        
         m++;
@@ -259,8 +266,8 @@ void PreparationArbre(string a, double angle){//a represente une ligne de caract
 *chaque noeud de l'arbre a des caracteristiques spécifiqués héritées du mot
 *
 ***********/
-int arbrePere(int m, string a, node* pere,double angle,double inclinaison){//dans les cas des []
-//  cout<<"bienvenue dans arbre pere avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et inclinaison ="<<inclinaison<<endl;
+int arbrePere(int m, string a, node* pere,double angleXY,double inclinaisonXY,double angleZ,double inclinaisonZ){//dans les cas des []
+//  cout<<"bienvenue dans arbre pere avec pere d'une inclinaisonXY de "<<pere->getInclinaisonXY()<<" et inclinaisonXY ="<<inclinaisonXY<<endl;
   m++;
   while ((a[m])!='\0'){
 //    cout<<"avec m="<<m<<endl;
@@ -269,23 +276,23 @@ int arbrePere(int m, string a, node* pere,double angle,double inclinaison){//dan
 //        cout<<"arret de arbrePere avec m="<<m<<endl;
         return (m);}
       if (a[m]=='['){
-//        cout<<"dans ce cas inclinaison ="<<inclinaison<<endl;
-       m= arbrePere(m, a, pere, angle, inclinaison);
+//        cout<<"dans ce cas inclinaisonXY ="<<inclinaisonXY<<endl;
+       m= arbrePere(m, a, pere, angleXY, inclinaisonXY,angleZ, inclinaisonZ);
 //       cout<<"retour de arbrePere avec m= "<<m<<endl;
      }
-      if(a[m]=='+'){ inclinaison -=angle;
-//        cout<<"apres un +, l'inclinaison devient"<<inclinaison<<endl;
+      if(a[m]=='+'){ inclinaisonXY -=angleXY;
+//        cout<<"apres un +, l'inclinaisonXY devient"<<inclinaisonXY<<endl;
       }
-      if(a[m]=='-'){ inclinaison +=angle;
-//        cout<<"apres un -, l'inclinaison devient"<<inclinaison<<endl;
+      if(a[m]=='-'){ inclinaisonXY +=angleXY;
+//        cout<<"apres un -, l'inclinaisonXY devient"<<inclinaisonXY<<endl;
       }
       if (((a[m] >64)&&(a[m] <91))||((a[m] >96)&&(a[m] <123)))
         {
               char tmpTab[2];
               tmpTab[0] = a[m];
               tmpTab[1] = '\0';
-              node *enfant = new node(10, inclinaison,true, tmpTab,pere );                 
-//              cout<<" inclinaison enfant "<<m<<" : "<<enfant->getInclinaison()<<"avec pere d'une inclinaison de "<<pere->getInclinaison()<<" et a[m]="<<a[m]<<endl;
+              node *enfant = new node(10, inclinaisonXY, inclinaisonZ,true, tmpTab,pere );                 
+//              cout<<" inclinaisonXY enfant "<<m<<" : "<<enfant->getInclinaisonXY()<<"avec pere d'une inclinaisonXY de "<<pere->getInclinaisonXY()<<" et a[m]="<<a[m]<<endl;
               pere=enfant;
         }
         m++;

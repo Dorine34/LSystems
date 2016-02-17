@@ -125,6 +125,8 @@ void afficheEdge(node *racine, std::ofstream* output)
   }
   for(unsigned int i = 0; i < racine->getEnfants()->size(); ++i)
   {
+    //std::cout<< " y="<<racine->getY()<<std::endl;
+    //std::cout<< " x="<<racine->getX()<<std::endl;
     *output << lround((racine->getY()/coeff)+decaY) << " "
             << lround((racine->getX()/coeff)+decaX) << " moveto" << std::endl;
     *output << lround((racine->getEnfants()->at(i)->getY()/coeff)+decaY) << " "
@@ -136,7 +138,7 @@ void afficheEdge(node *racine, std::ofstream* output)
 
 void affichageGraphique(node* root)
 {
- // std::cout<<"entree dans affiche vector 2"<<std::endl;
+  std::cout<<"entree dans affiche vector 2"<<std::endl;
   std::cout << "Debut ecriture du .ps" << std::endl;
   std::ofstream output;
   output.open("arbre.ps",std::ios::out);

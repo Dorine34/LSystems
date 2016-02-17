@@ -3,19 +3,21 @@ code a ameliorer :
   -utiliser des debuggers
   -verifier la memoire
 
-problemes ;
-un petit soucis sur les coordonnees
-axiomes superieurs à une lettre pas encore faits
-centrer l'affichage sur l'arbre en question
+
 
 exemples de codes sympas :
   20
     X.
     X=[+XX]-XX.
 
-  60
-    A.
-    A=B-A.
-    B=A-B.
-    
-  
+60
+  A.
+  A=B-A.
+  B=A-B.
+
+60 10
+  A.
+  A=B-A.
+  B=A-B.
+
+ Attention, un espace dans tous les cas à côté de l'angleXY est nécessaire.

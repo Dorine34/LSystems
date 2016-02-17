@@ -1,20 +1,26 @@
+
+
 #include "node.h"
 
 node::node()
 {
   setX(0);
   setY(0);
-  setInclinaison(0);
+  setZ(0);
+  setInclinaisonXY(0);
+  setInclinaisonZ(0);
   setPere(NULL);
   this->enfants = new std::vector<node*>();
   this->name = NULL;
-  this->angle = 0;
+  this->angleXY = 0;
+  this->angleZ = 0;
 }
 
-node::node(node* pere, double x, double y, double inclinaison, char* name)
+node::node(node* pere, double x, double y, double z, double inclinaisonXY,double  inclinaisonZ, char* name)
 {
   std::cout<<"entree dans node ()"<<std::endl;
-  this->angle = 0;
+  this->angleXY = 0;
+  this->angleZ = 0;
   if(pere != NULL)
   {
     pere->ajoutEnfant(this);
@@ -27,12 +33,14 @@ node::node(node* pere, double x, double y, double inclinaison, char* name)
   this->setName(name);
   setX(x);
   setY(y);
-  setInclinaison(inclinaison);
+  setZ(z);
+  setInclinaisonXY(inclinaisonXY);
+  setInclinaisonZ(inclinaisonZ);
   setDV(false);
   this->enfants = new std::vector<node*>();
 }
 
-node::node(double distance, double angle, bool horaire, char* name, node* pere){
+node::node(double distance, double angleXY, double angleZ, bool horaire, char* name, node* pere){
   
   if(pere != NULL)
   {
@@ -46,13 +54,23 @@ node::node(double distance, double angle, bool horaire, char* name, node* pere){
       h = 1;
     }
     this->pere = pere;
-    this->angle = angle;
+    this->angleXY = angleXY;
+    this->angleZ = angleZ;
     //this->angle -= 0.5 * (this->getPere()->angle);
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
-    setX(this->pere->getX() + distance * cos(PI * this->angle * direction / 180));
-    setY(this->pere->getY() + distance * sin(PI * this->angle * direction / 180));
-    setInclinaison(this->pere->getInclinaison() + this->angle * direction);
+
+    double passageEn3D = cos(PI * this->angleZ * direction / 180);
+    setX(this->pere->getX() + passageEn3D*distance*cos(PI * this->angleXY * direction / 180));
+
+    setY(this->pere->getY() + passageEn3D*distance*sin(PI * this->angleXY * direction / 180));
+
+    setZ(this->pere->getZ()+ distance *sin(PI * this->angleZ * direction / 180));
+
+    setInclinaisonXY(this->pere->getInclinaisonXY() + this->angleXY * direction);
+    setInclinaisonZ(this->pere->getInclinaisonZ() + this->angleZ * direction);
+    //std::cout<<"x="<<(this->x )<<" car passage en 3d="<<cos(PI * this->angleZ * direction / 180)<< "cos(0)="<<cos(0)<< " et cos(1)="<<cos(1)<<std::endl;
+    //std::cout<<"y=" <<(this->y )<<std::endl;
     setDV(false);
     this->enfants = new std::vector<node*>();
     this->name = NULL;
@@ -142,15 +160,36 @@ void node::setY(double y)
   this->y = y;
 }
 
-double node::getInclinaison()
-{
-  return this->inclinaison;
+double node::getZ(){
+  return this->z;
 }
 
-void node::setInclinaison(double inclinaison)
+void node::setZ(double z)
 {
-  this->inclinaison = inclinaison;
+  this->z = z;
 }
+
+
+double node::getInclinaisonXY()
+{
+  return this->inclinaisonXY;
+}
+
+void node::setInclinaisonXY(double inclinaison)
+{
+  this->inclinaisonXY = inclinaison;
+}
+
+double node::getInclinaisonZ()
+{
+  return this->inclinaisonZ;
+}
+
+void node::setInclinaisonZ(double inclinaison)
+{
+  this->inclinaisonZ = inclinaison;
+}
+
 
 node* node::getPere()
 {
