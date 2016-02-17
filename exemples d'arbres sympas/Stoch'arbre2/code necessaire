@@ -3,5 +3,3 @@ X.
 (0,5)X=F[++X]F[-X]+X.
 (0,5)X=F[+X]F[-X]+X.
 F=FF.
-
-//iterer 5 fois dans les exemples

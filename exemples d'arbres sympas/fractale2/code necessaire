@@ -1,8 +1,4 @@
-exemple de fractale
-
 60
 A.
 B=A+B+A.
 A=B-A-B.
-
-iterer 4 fois

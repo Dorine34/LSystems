@@ -145,9 +145,22 @@ int main(int argc, char** argv)
   //cout<<" rajout de "<<axiomeDeBase[0];
    affichageGraphique(etageF.at(0));
 
+
+
+
   tabF[0] = new char[(strlen(strF) + 1) * sizeof(char)];
   strcpy(tabF[0], strF);
   char saisie[100];
+
+  if (argc == 3){
+    int arg= atoi(argv[2]);
+    cout<<arg<<endl;
+    for (int i=0; i<arg;i++){ 
+       createTreeRankByRankF(&etageF, angle, &motsP, &reglesP);//la creation en soit de l'arbre qui donnera le mot
+     
+    }
+     return(0);
+  }
 
   cout << "Appuyez sur une touche pour continuer, un nombre pour avancer directement au rang et quit pour quitter" << endl;
   cin >> saisie;
