@@ -64,8 +64,8 @@ void coef(node* racine, std::ofstream* output){
   decaX = XMAX/2 - (centreX)/coeff;
   decaY = YMAX/2 - (centreY)/coeff;
 
-    std::cout << "Y : " << (ytot/2)/coeff + decaY << " =? " << YMAX/2 << std::endl;
-    std::cout << "X : " << (xtot/2)/coeff + decaX << " =? " << XMAX/2 << std::endl;
+    // std::cout << "Y : " << (ytot/2)/coeff + decaY << " =? " << YMAX/2 << std::endl;
+    // std::cout << "X : " << (xtot/2)/coeff + decaX << " =? " << XMAX/2 << std::endl;
 
     double Ycentered = (ytot/2)/coeff + decaY;
     double Xcentered = (xtot/2)/coeff + decaX;
@@ -129,8 +129,8 @@ void afficheEdge(node *racine, std::ofstream* output)
     //std::cout<< " x="<<racine->getX()<<std::endl;
     *output << lround((racine->getY()/coeff)+decaY) << " "
             << lround((racine->getX()/coeff)+decaX) << " moveto" << std::endl;
-    *output << lround((racine->getEnfants()->at(i)->getY()/coeff)+decaY) << " "
-            << lround((racine->getEnfants()->at(i)->getX()/coeff)+decaX) << " lineto" << std::endl;
+    *output << lround((racine->getEnfant(i)->getY()/coeff)+decaY) << " "
+            << lround((racine->getEnfant(i)->getX()/coeff)+decaX) << " lineto" << std::endl;
     *output << "stroke" << std::endl;
     *output << std::endl;
   }
@@ -140,6 +140,7 @@ void affichageGraphique(node* root)
 {
   std::cout<<"entree dans affiche vector 2"<<std::endl;
   std::cout << "Debut ecriture du .ps" << std::endl;
+  std::cout << "Nb enfants racine : " << root->getEnfants()->size() << std::endl;
   std::ofstream output;
   output.open("arbre.ps",std::ios::out);
   output << "%!PS-Adobe-3.0" << std::endl;

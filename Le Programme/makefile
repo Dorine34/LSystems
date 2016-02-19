@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -std=c++14 -g -Wall -ansi
 LDFLAGS =
-objects = ter3.o node.o afficheps.o creation.o probabilite.o
+objects = ter3.o node.o afficheps.o creation.o probabilite.o export.o
 executable = ter1
 
 all: executable

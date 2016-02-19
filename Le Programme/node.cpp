@@ -208,16 +208,21 @@ std::vector<node*>* node::getEnfants()
 
 node* node::getEnfant(int index)
 {
-  if(index < this->enfants->size())
+  if(0 <= index && index < this->enfants->size())
   {
     return this->enfants->at(index);
   }
-  else return NULL;
+  else
+  {
+    return NULL;
+  }
 }
 
 void node::setEnfants(std::vector<node*> *enfants)
 {
   this->enfants = enfants;
   for(int i = 0; i < this->enfants->size(); ++i)
+  {
     this->enfants->at(i)->setPere(this);
+  }
 }
