@@ -1,4 +1,7 @@
-45
+angleXY=45.
+angleZ=0.
+largeur=1.
+longueur=10.
 L--F--L--F.
 L=+R-F-R+.
 R=-L+F+L-.

@@ -1,4 +1,7 @@
-120
+angleXY=120.
+angleZ=0.
+largeur=1.
+longueur=10.
 F-G-G.
 F=F-G+F+G-F.
 G=GG.

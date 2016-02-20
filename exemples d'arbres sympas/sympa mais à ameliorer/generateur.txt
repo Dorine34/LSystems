@@ -1,4 +1,7 @@
-90 
+angleXY=90.
+angleZ=0.
+largeur=1.
+longueur=10.
 XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX.
 X=FX+FX+FXFY-FY-.
 Y=+FX+FXFY-FY-FY.

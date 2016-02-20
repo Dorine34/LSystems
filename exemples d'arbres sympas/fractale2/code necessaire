@@ -1,4 +1,7 @@
-60
+angleXY=60.
+angleZ=0.
+largeur=1.
+longueur=10.
 A.
 B=A+B+A.
 A=B-A-B.
