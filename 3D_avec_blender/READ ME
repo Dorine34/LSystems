@@ -2,6 +2,8 @@ comment l'utiliser ?
   version 2.76 minimum recommandee
   placer son curseur sur la zone de texte a droite et appuyer soit sur Alt+P soit sur le bouton "Run Script" en bas
   un onglet "TER" c'est rajoute sur la gauche ayant quelques fonctionnalites
+  condition :
+    le programme doit s'appeller "ter1" et etre dans le dossier "../Le Programme/"
 
 fonctionnalites actuelles :
   automatique :
@@ -10,14 +12,11 @@ fonctionnalites actuelles :
   en cas d'appel :
     permet de saisir un path (pour le fichier de regles)
     permet de choisir le nombre d'iterations
-    permet de generer soit un semblant d'arbre soit un cylindre different de celui par defaut
+    permet de generer l'arbre selon les regles et le nombre d'iterations donnes
     tous les objets crees sont supprimes a la creation d'un nouveau (uniquement pour pouvoir tester plus facilement)
 
 code a ameliorer :
-  finir la liaison avec le code C++
-  proposition :
-    appeler le programme C++ tel que "prog <path> <iter>" puis lire un fichier de notre propre serialisation
-    "prog <path>" appele pour le moment - cause des crash car attente de saisie
+  voir problemes
 
 problemes :
   pas de rendu possible pour le moment
@@ -26,11 +25,18 @@ problemes :
   resolution :
     transformer les edges en cylindres/cones
     soit autour de l'axe forme par les edges, soit pour les cylindres se servir des edges comme un des edges le formant
+  autre resolution (en cours) :
+    faire une extrusion des points en y puis en x de 1 de distance puis de y et x de -1 de distance (pseudo cylindre)
+      puis passer l'objet dans le modifier Subdivision Surface et smooth les shader
+  l'arbre est trop grand pour la scene
+  resolution :
+    pas de resolution automatique, il faut le redimensionner selon les besoins
 
 exemples sympas :
-  NONE ATM
+  generateur.txt disponible dans le dossier "../Le Programme/"
 
 A FAIRE
+  enlever la suppression automatique
   transformer le script en addon
   condition :
     une fois le script FINIS
