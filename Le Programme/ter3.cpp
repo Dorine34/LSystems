@@ -3,7 +3,7 @@
 /*
 /* Petite coquille avec les ordonnées
 /*
-/* 
+/*
 /*****************Yin, Arcadia et Oxidire*******************/
 
 
@@ -21,16 +21,16 @@
 #include "export.h"
 
 using namespace std;
- 
+
 
 
 int main(int argc, char** argv)
 {
   cout << "Bonjour camarades!" << endl;//message de convivialité (parce que c'est important la convivialite)
-  
+
   vector<node*> etageF;//etages selon le rang de creation du mot
   vector<Probabilite> reglesP;// contraintes rangees par domaine
-  vector<char> motsP;//les mots formes a partir de probabilite  
+  vector<char> motsP;//les mots formes a partir de probabilite
   char* filenameF = new char[11 * sizeof(char)];
   sprintf(filenameF, "generateur.txt");
 
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
   double angleZ = 0;
   double poids;
   double hauteur;
-   
+
   lectureReglesF(filenameF, &motsP, &reglesP, &angleXY, &angleZ, &poids, &hauteur, &axiomeDeBase);
 
   cout << endl << "tableau enregistre :" << endl;
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 
   cout << "angleXY = " << angleXY << " et angleZ = " << angleZ << endl;
   cout << "axiome de base = " << axiomeDeBase << "de taille :" << axiomeDeBase.size() << endl;
-    
+
   premierAxiome( & axiomeDeBase, & poids, & hauteur,& angleXY, & angleZ, &etageF);
 
   char saisie[100];
@@ -77,9 +77,13 @@ int main(int argc, char** argv)
   {
     int arg = atoi(argv[2]);
     cout << arg << endl;
-    for(int i = 0; i<arg;i++)
-    { 
+    for(int i = 0; i < arg; ++i)
+    {
       createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit de l'arbre qui donnera le mot
+    }
+    for (int i = 0; i < etageF.size(); ++i)
+    {
+      delete etageF.at(i);
     }
     // exportObj(etageF.at(0), filenameF);
     return 0;
@@ -90,13 +94,13 @@ int main(int argc, char** argv)
 
   while(strcmp(saisie, "quit") != 0)
   {
-    if ((saisie [0]<= '9')&&(saisie [0]>= '0'))
+    if((saisie [0] <= '9')&&(saisie [0]>= '0'))
     {
       cout << "c'est un nombre!" << endl;//cas ou on passe plusieurs sequences en meme temps
       int s = atoi(saisie);
       cout << s << endl;
       for(int i = 0; i<s;i++)
-      { 
+      {
         cout << endl << "Resultat : " << endl << endl;
         createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit de l'arbre qui donnera le mot
       }
@@ -112,11 +116,11 @@ int main(int argc, char** argv)
     }
   }
   /*
-  cout<<"pour conclure :"<<endl;
-  
+  cout << "pour conclure :" << endl;
+
   for(int i = 0; i < etageF.size(); ++i)
   {
-    cout<<etageF.at(i)->getName()[0]<<" a un poids de "<<etageF.at(i)->getPoids()<<endl;
+    cout << etageF.at(i)->getName()[0] << " a un poids de " << etageF.at(i)->getPoids() << endl;
     delete(etageF.at(i));
   }
   */

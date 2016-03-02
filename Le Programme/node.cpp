@@ -42,7 +42,7 @@ node::node(node* pere, double x, double y, double z, double inclinaisonXY,double
 }
 
 node::node(double distance, double angleXY, double angleZ, bool horaire, char* name, node* pere){
-  
+
   if(pere != NULL)
   {
     int h;
@@ -67,7 +67,7 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
     setY(this->pere->getY() + passageEn3D*distance*sin(PI * this->angleXY * direction / 180));
 
     setZ(this->pere->getZ()+ distance *sin(PI * this->angleZ * direction / 180));
-    
+
     //setPoids(this->pere->getPoids()/2);//poids du pere = poids du fils/2
     setInclinaisonXY(this->pere->getInclinaisonXY() + this->angleXY * direction);
     setInclinaisonZ(this->pere->getInclinaisonZ() + this->angleZ * direction);
@@ -81,7 +81,7 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
     //std::cout<<"nb de freres="<<this->pere->getEnfants()->size()<<std::endl;
     int nbVraisEnfants=0;
     double nouveauPoids=this->pere->getPoids();
-    //std::cout<<"Bonjour, je suis : "<<this->getName()<<" Mon pere est"<<this->pere->getName()[0]<<"et pese :"<<nouveauPoids<<std::endl; 
+    //std::cout<<"Bonjour, je suis : "<<this->getName()<<" Mon pere est"<<this->pere->getName()[0]<<"et pese :"<<nouveauPoids<<std::endl;
      for (int i = 0; i < this->pere->getEnfants()->size(); ++i)
     {
       //std::cout<<"Mon frere  "<<this->pere->getEnfant(i)->getName()[0];
@@ -90,7 +90,7 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
       if(((this->pere->getEnfant(i)->getName()[0] > 64) && (this->pere->getEnfant(i)->getName()[0] < 91))
         || ((this->pere->getEnfant(i)->getName()[0] > 96) && (this->pere->getEnfant(i)->getName()[0] < 123)))
       {
-        //std::cout<<this->pere->getEnfant(i)->getName()<<"  ";  
+        //std::cout<<this->pere->getEnfant(i)->getName()<<"  ";
         nbVraisEnfants++;
       }
       //std::cout<<std::endl<<" J'en ai donc :"<<nbVraisEnfants<<std::endl;
@@ -103,12 +103,12 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
         || ((this->pere->getEnfant(i)->getName()[0] > 96) && (this->pere->getEnfant(i)->getName()[0] < 123)))
       {
 
-        this->setPoids(nouveauPoids/nbVraisEnfants); 
+        this->setPoids(nouveauPoids/nbVraisEnfants);
         //std::cout<<this->pere->getEnfant(i)->getName()[0]<<" -> "<<this->pere->getEnfant(i)->getPoids()<<" ";
       }
       //std::cout<<"name="<<(this->name)<<"pere ="<< this->pere->getName()<<" poids="<<(this->poids)<<std::endl;
     }
-    
+
 
 //    std::cout<<"on a donc dans node(.....) : angle = "<<angle<<" et inclinaison = "<<inclinaison<<std::endl;
   }
@@ -123,6 +123,10 @@ node::~node()
   if(this->name != NULL)
   {
     delete this->name;
+  }
+  for(unsigned int i = 0; i < this->getEnfants()->size(); ++i)
+  {
+    delete this->enfants->at(i);
   }
   delete this->enfants;
 }
