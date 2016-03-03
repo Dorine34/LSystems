@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   vector<node*> etageF;//etages selon le rang de creation du mot
   vector<Probabilite> reglesP;// contraintes rangees par domaine
   vector<char> motsP;//les mots formes a partir de probabilite
-  char* filenameF = new char[11 * sizeof(char)];
+  char* filenameF = new char[11];
   sprintf(filenameF, "generateur.txt");
 
   /**ouverture du fichier**/
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   if(argc == 2 || argc == 3)
   {
     delete filenameF;
-    filenameF = new char[(strlen(argv[1]) + 1) * sizeof(char)];
+    filenameF = new char[(strlen(argv[1]) + 1)];
     filenameF = argv[1];
   }
   pFileF = fopen(filenameF, "r");
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
   cout << "angleXY = " << angleXY << " et angleZ = " << angleZ << endl;
   cout << "axiome de base = " << axiomeDeBase << "de taille :" << axiomeDeBase.size() << endl;
 
-  premierAxiome( & axiomeDeBase, & poids, & hauteur,& angleXY, & angleZ, &etageF);
+  premierAxiome(&axiomeDeBase, &poids, &hauteur, &angleXY, &angleZ, &etageF);
 
   char saisie[100];
 
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
   while(strcmp(saisie, "quit") != 0)
   {
-    if((saisie [0] <= '9')&&(saisie [0]>= '0'))
+    if((saisie[0] <= '9') && (saisie[0]>= '0'))
     {
       cout << "c'est un nombre!" << endl;//cas ou on passe plusieurs sequences en meme temps
       int s = atoi(saisie);
@@ -124,6 +124,10 @@ int main(int argc, char** argv)
     delete(etageF.at(i));
   }
   */
-  delete filenameF;
+  for (int i = 0; i < etageF.size(); ++i)
+  {
+    delete etageF.at(i);
+  }
+  // delete filenameF;
   return 0;
 }

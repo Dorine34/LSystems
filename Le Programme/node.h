@@ -13,15 +13,13 @@ class node
 {
 public:
   node();
-  node(node*, double, double,double, double, double, char*,double);
+  node(node*, double, double,double, double, double, char*, double);
   node(double, double, double, bool, char*, node*);
   ~node();
 
-  void ajoutEnfant(node*);
-  void resetDV();
+  node& operator=(const node &n);
 
-  bool getDV();
-  void setDV(bool);
+  void ajoutEnfant(node*);
 
   char* getName();
   void setName(char*);
@@ -31,6 +29,9 @@ public:
 
   double getY();
   void setY(double);
+
+  double getZ();
+  void setZ(double);
 
   double getInclinaisonXY();
   void setInclinaisonXY(double);
@@ -42,18 +43,13 @@ public:
   void setPere(node*);
 
   node* getEnfant(int);
-  void setEnfants(std::vector<node*>*);
   std::vector<node*>* getEnfants();
-
-
-  double getZ();
-  void setZ(double);
-
+  void setEnfants(std::vector<node*>*);
 
   double getPoids();
   void setPoids(double);
-protected:
-  bool dv;
+
+private:
   char* name;
   double x, y, z, inclinaisonXY, inclinaisonZ, poids;
   node* pere;

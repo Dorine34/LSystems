@@ -1,5 +1,3 @@
-
-
 #include "node.h"
 
 node::node()
@@ -16,7 +14,9 @@ node::node()
   this->angleZ = 0;
 }
 
-node::node(node* pere, double x, double y, double z, double inclinaisonXY,double  inclinaisonZ, char* name, double poids)
+node::node(node* pere, double x, double y, double z,
+          double inclinaisonXY, double  inclinaisonZ,
+          char* name, double poids)
 {
   std::cout<<"entree dans node ()"<<std::endl;
   this->angleXY = 0;
@@ -36,13 +36,13 @@ node::node(node* pere, double x, double y, double z, double inclinaisonXY,double
   setZ(z);
   setInclinaisonXY(inclinaisonXY);
   setInclinaisonZ(inclinaisonZ);
-  setDV(false);
   setPoids(poids);
   this->enfants = new std::vector<node*>();
 }
 
-node::node(double distance, double angleXY, double angleZ, bool horaire, char* name, node* pere){
-
+node::node(double distance, double angleXY, double angleZ,
+          bool horaire, char* name, node* pere)
+{
   if(pere != NULL)
   {
     int h;
@@ -62,31 +62,27 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
     int direction = pow(-1, h);
 
     double passageEn3D = cos(PI * this->angleZ * direction / 180);
-    setX(this->pere->getX() + passageEn3D*distance*cos(PI * this->angleXY * direction / 180));
+    setX(this->pere->getX() + passageEn3D * distance * cos(PI * this->angleXY * direction / 180));
+    setY(this->pere->getY() + passageEn3D * distance * sin(PI * this->angleXY * direction / 180));
+    setZ(this->pere->getZ() + distance * sin(PI * this->angleZ * direction / 180));
 
-    setY(this->pere->getY() + passageEn3D*distance*sin(PI * this->angleXY * direction / 180));
-
-    setZ(this->pere->getZ()+ distance *sin(PI * this->angleZ * direction / 180));
-
-    //setPoids(this->pere->getPoids()/2);//poids du pere = poids du fils/2
+    // setPoids(this->pere->getPoids()/2);// poids du pere = poids du fils/2
     setInclinaisonXY(this->pere->getInclinaisonXY() + this->angleXY * direction);
     setInclinaisonZ(this->pere->getInclinaisonZ() + this->angleZ * direction);
-    //std::cout<<"x="<<(this->x )<<" car passage en 3d="<<cos(PI * this->angleZ * direction / 180)<< "cos(0)="<<cos(0)<< " et cos(1)="<<cos(1)<<std::endl;
-    //std::cout<<"y=" <<(this->y )<<std::endl;
-    setDV(false);
+    // std::cout << "x=" << (this->x ) << " car passage en 3d="<<cos(PI * this->angleZ * direction / 180) << "cos(0)="<<cos(0)<< " et cos(1)="<<cos(1)<<std::endl;
+    // std::cout << "y=" << (this->y ) << std::endl;
     this->enfants = new std::vector<node*>();
     this->name = NULL;
     this->setName(name);
-    //std::cout<<"name="<<(this->name)<<" poids="<<(this->poids)<<std::endl;
-    //std::cout<<"nb de freres="<<this->pere->getEnfants()->size()<<std::endl;
-    int nbVraisEnfants=0;
-    double nouveauPoids=this->pere->getPoids();
-    //std::cout<<"Bonjour, je suis : "<<this->getName()<<" Mon pere est"<<this->pere->getName()[0]<<"et pese :"<<nouveauPoids<<std::endl;
+    //std::cout << "name=" << (this->name) << " poids=" << (this->poids) << std::endl;
+    //std::cout << "nb de freres=" << this->pere->getEnfants()->size() << std::endl;
+    int nbVraisEnfants = 0;
+    double nouveauPoids = this->pere->getPoids();
+    //std::cout<<"Bonjour, je suis : "<<this->getName() << " Mon pere est" << this->pere->getName()[0] <<"et pese :"<<nouveauPoids<<std::endl;
      for (int i = 0; i < this->pere->getEnfants()->size(); ++i)
     {
-      //std::cout<<"Mon frere  "<<this->pere->getEnfant(i)->getName()[0];
-      // this->pere->getEnfant(i)->resetDV();
-      //std::cout<<"mes freres sont :";
+      //std::cout << "Mon frere  " << this->pere->getEnfant(i)->getName()[0];
+      //std::cout << "mes freres sont :";
       if(((this->pere->getEnfant(i)->getName()[0] > 64) && (this->pere->getEnfant(i)->getName()[0] < 91))
         || ((this->pere->getEnfant(i)->getName()[0] > 96) && (this->pere->getEnfant(i)->getName()[0] < 123)))
       {
@@ -104,17 +100,15 @@ node::node(double distance, double angleXY, double angleZ, bool horaire, char* n
       {
 
         this->setPoids(nouveauPoids/nbVraisEnfants);
-        //std::cout<<this->pere->getEnfant(i)->getName()[0]<<" -> "<<this->pere->getEnfant(i)->getPoids()<<" ";
+        // std::cout << this->pere->getEnfant(i)->getName()[0] << " -> "<<this->pere->getEnfant(i)->getPoids() << " ";
       }
-      //std::cout<<"name="<<(this->name)<<"pere ="<< this->pere->getName()<<" poids="<<(this->poids)<<std::endl;
+      // std::cout << "name=" << (this->name) << "pere =" << this->pere->getName() << " poids=" << (this->poids) << std::endl;
     }
-
-
-//    std::cout<<"on a donc dans node(.....) : angle = "<<angle<<" et inclinaison = "<<inclinaison<<std::endl;
+    // std::cout<<"on a donc dans node(.....) : angle = "<<angle<<" et inclinaison = "<<inclinaison<<std::endl;
   }
   else
   {
-    std::cout << "Constructor failed, this->pere = " << this->pere<<std::endl;
+    std::cout << "Constructor failed, this->pere = " << this->pere << std::endl;
   }
 }
 
@@ -128,34 +122,55 @@ node::~node()
   {
     delete this->enfants->at(i);
   }
-  delete this->enfants;
+  if(this->enfants != NULL)
+  {
+    delete this->enfants;
+  }
+}
+
+node& node::operator=(const node &n)
+{
+  if(this == &n)
+  {
+    return *this;
+  }
+  this->x = n.x;
+  this->y = n.y;
+  this->z = n.z;
+  this->inclinaisonXY = n.inclinaisonXY;
+  this->inclinaisonZ = n.inclinaisonZ;
+  this->poids = n.poids;
+  this->angleXY = n.angleXY;
+  this->angleZ = n.angleZ;
+
+  if(name != NULL)
+  {
+    delete name;
+  }
+  name = n.name;
+
+  if(pere != NULL)
+  {
+    delete pere;
+  }
+  pere = n.pere;
+
+  for(unsigned int i = 0; i < n.enfants->size(); ++i)
+  {
+    delete enfants->at(i);
+  }
+  enfants->clear();
+  for(unsigned int i = 0; i < n.enfants->size(); ++i)
+  {
+    enfants->push_back(n.enfants->at(i));
+  }
+  return *this;
 }
 
 void node::ajoutEnfant(node* enfant)
 {
   this->enfants->push_back(enfant);
   enfant->setPere(this);
-}
-
-void node::resetDV(){
-  if(this->getEnfants()->size() > 0)
-  {
-    for (int i = 0; i < this->getEnfants()->size(); ++i)
-    {
-      this->getEnfant(i)->resetDV();
-    }
-  }
-  this->setDV(false);
-}
-
-bool node::getDV()
-{
-  return this->dv;
-}
-
-void node::setDV(bool dv)
-{
-  this->dv = dv;
 }
 
 char* node::getName()
@@ -208,7 +223,6 @@ void node::setZ(double z)
   this->z = z;
 }
 
-
 double node::getInclinaisonXY()
 {
   return this->inclinaisonXY;
@@ -229,7 +243,6 @@ void node::setInclinaisonZ(double inclinaison)
   this->inclinaisonZ = inclinaison;
 }
 
-
 node* node::getPere()
 {
   return this->pere;
@@ -238,11 +251,6 @@ node* node::getPere()
 void node::setPere(node* pere)
 {
   this->pere = pere;
-}
-
-std::vector<node*>* node::getEnfants()
-{
-  return this->enfants;
 }
 
 node* node::getEnfant(int index)
@@ -257,6 +265,11 @@ node* node::getEnfant(int index)
   }
 }
 
+std::vector<node*>* node::getEnfants()
+{
+  return this->enfants;
+}
+
 void node::setEnfants(std::vector<node*> *enfants)
 {
   this->enfants = enfants;
@@ -265,7 +278,6 @@ void node::setEnfants(std::vector<node*> *enfants)
     this->enfants->at(i)->setPere(this);
   }
 }
-
 
 double node::getPoids(){
   return this->poids;

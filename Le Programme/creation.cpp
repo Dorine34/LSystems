@@ -160,7 +160,6 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
                   }
                 }
               }
-
             }
             // cout << "la ligne oubliee selon 2 est" << line << endl;
           }
@@ -198,7 +197,9 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   {
     char x = (*etageF).at(i)->getName()[0];
     //cout <<endl<<endl<< "etape1 : x correspond a" << (*etageF).at(i)->getName() << endl;
-    if((x == '[')||(x == ']')||(x == '+')||(x == '-')||(x == '/')||(x == 92))
+    if((x == '[') || (x == ']')
+    || (x == '+') || (x == '-')
+    || (x == '/') || (x == '\\'))
     {
       // cout << "cas4" << endl;
       // cout << endl << endl << " cas : etape2 avec pere=" << (*etageF).at(i) << endl;
@@ -283,10 +284,10 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
     r = r/10;
   }
   // cout << endl;
-  (*etageF).clear();
+  etageF->clear();
   for(int i = 0; i < etageSuivant.size(); ++i)
   {
-    (*etageF).push_back(etageSuivant.at(i));
+    etageF->push_back(etageSuivant.at(i));
   }
   cout << " a = " << a.str() << endl;
   PreparationArbre(a.str(), angleXY, angleZ, hauteur, poids);
@@ -312,8 +313,8 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
   int cpt = 0;
   while((a[m]) != '\0')
   {
-    if(((a[m] > 64) && (a[m] < 91))
-    || ((a[m] > 96) && (a[m] < 123)))
+    if(((a[m] >= 'A') && (a[m] <= 'Z'))
+    || ((a[m] >= 'a') && (a[m] <= 'z')))
     {
       //cout << a[m];
       cpt++;
@@ -328,15 +329,15 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
   // cout << "inclinaisonXY racineR : " << racineR->getInclinaisonXY() << endl;
   etageR.push_back(racineR);
   node* pere = racineR;
-  node* enfant ;
+  node* enfant;
   double inclinaisonXY = 0;
   double inclinaisonZ = 0;
   // cout << "etape4 franchie" << endl;
   while((a[m]) != '\0')
   {
   // cout << "avec m = " << m << endl;
-    if(((a[m] > 64) && (a[m] < 91))
-    || ((a[m] > 96) && (a[m] < 123)))
+    if(((a[m] >= 'A') && (a[m] <= 'Z'))
+    || ((a[m] >= 'a') && (a[m] <= 'z')))
     {
       //cout << " cas1 de prep :a[" << m << "] = " << a[m] << " en int " << (int)a[m] << endl;
       char tmpTab[2];
@@ -350,17 +351,16 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
       */
       //cout << endl << endl << "enfant =" << enfant->getName() << "pere=" << pere->getName() << endl;
       pere = enfant;
-
     }
     else
     {
-      //cout<<"cas1"<<endl;
+      // cout<<"cas1"<<endl;
       if(a[m] == '[')
       {
-      //cout << endl << endl << "2eme cas =" << enfant->getName() << endl;
-      //cout << "1er test inclinaisonZ = " << inclinaisonZ <<"angle Z="<<angleZ<< endl;
-      //cout << "Tandis que inclinaisonXY = " << inclinaisonXY <<"angle XY="<<angleXY<< endl;
-      m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur);
+        // cout << endl << endl << "2eme cas =" << pere->getName() << endl;
+        // cout << "1er test inclinaisonZ = " << inclinaisonZ <<"angle Z="<<angleZ<< endl;
+        // cout << "Tandis que inclinaisonXY = " << inclinaisonXY <<"angle XY="<<angleXY<< endl;
+        m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur);
       }
       if(a[m] == '+')
       {
@@ -377,7 +377,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
         inclinaisonZ += angleZ;
         //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
       }
-      if(a[m] == 92)
+      if(a[m] == '\\')
       {
         inclinaisonZ -= angleZ;
         //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
@@ -388,11 +388,11 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
   // cout << "main :x = " << racineR->getX() << " et y = " << racineR->getY() << endl;
   affichageGraphique(racineR);
   exportObj(racineR);
-
-  for (int i = 0; i < etageR.size() ; ++i)
+  for (int i = 0; i < etageR.size(); ++i)
   {
     delete etageR.at(i);
   }
+  delete tmp;
   // cout << "arbre prepare !" << endl;
 }
 
@@ -437,20 +437,20 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
       inclinaisonZ += angleZ;
       //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
     }
-    if(a[m] == 92)//utilisation de l'ascii car '\' fait des choses bizarres
+    if(a[m] == '\\')//utilisation de l'ascii car '\' fait des choses bizarres
     {
       //cout <<"avec a[m]="<<a[m]<< "l'inclinaisonZ était :" << inclinaisonZ;
       inclinaisonZ -= angleZ;
       //cout << "et  devient :" << inclinaisonZ << endl;
     }
 
-    if(((a[m] > 64) && (a[m] < 91))
-    || ((a[m] > 96) && (a[m] < 123)))
+    if(((a[m] >= 'A') && (a[m] <= 'Z'))
+    || ((a[m] >= 'a') && (a[m] <= 'z')))
     {
       char tmpTab[2];
       tmpTab[0] = a[m];
       tmpTab[1] = '\0';
-      node *enfant = new node(hauteur, inclinaisonXY, inclinaisonZ, true, tmpTab, pere );
+      node *enfant = new node(hauteur, inclinaisonXY, inclinaisonZ, true, tmpTab, pere);
       /*
       cout << " inclinaisonXY enfant " << m << " : " << enfant->getInclinaisonXY()
            << "avec pere d'une inclinaisonXY de " << pere->getInclinaisonXY() << " et a[m] = " << a[m] << endl;
@@ -466,10 +466,9 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
 Mais a quoi sert premierAxiome ?
 lors des premiers axiomes multiples,
 A par
-
 ****/
-void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, double * angleXY, double * angleZ, vector<node*> *etageF){
-
+void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double* angleXY, double* angleZ, vector<node*>*etageF)
+{
   char motRacineF;
   node* racineF;
   node *racine;
@@ -484,21 +483,22 @@ void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, dou
     etageF->push_back(racineF);
     delete tmpTabF;
   }
-  else {
+  else
+  {
     motRacineF = 'R';
     char *tmpTabF = new char[2];
     tmpTabF[0] = motRacineF;
     tmpTabF[1] = '\0';
-   // cout << "mot tmp = " << tmpTabF << endl;
+    // cout << "mot tmp = " << tmpTabF << endl;
     racineF = new node(NULL, 0, 0, 0, 0, 0, tmpTabF, *poids);
     etageF->push_back(racineF);
     if(axiomeDeBase->size() != 1)
     {
       // cas ou l axiome de base est multiple, on cree ici le premier etage
       etageF->pop_back();
-      char *nom = new char[axiomeDeBase->size()];
-      node*pere = racineF;
-      node*enfant;
+      char* nom = new char[axiomeDeBase->size()];
+      node* pere = racineF;
+      node* enfant;
       int m = 0;
       int n = 0;
       double inclinaisonXY = 0;
@@ -507,7 +507,8 @@ void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, dou
       {
         nom[m] = (*axiomeDeBase)[n];
         //cout << "nom[m] = " << nom[m] << endl;
-        if(((nom[m] >64)&&(nom[m] <91))||((nom[m] >96)&&(nom[m] <123)))
+        if(((nom[m] >= 'A') && (nom[m] <= 'Z'))
+        || ((nom[m] >= 'a') && (nom[m] <= 'z')))
         {
           nom[m+1] = '\0'; m = -1;
 
@@ -538,7 +539,7 @@ void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, dou
             inclinaisonZ += *angleZ;
             //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
           }
-          if(nom[m] == 92)//utilisation de l'ascii car '\' fait des choses bizarres
+          if(nom[m] == '\\')//utilisation de l'ascii car '\' fait des choses bizarres
           {
             inclinaisonZ -= *angleZ;
             //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
@@ -553,22 +554,22 @@ void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, dou
         m++;
         n++;
       }
-      delete tmpTabF;
       nom[axiomeDeBase->size()+1] = '\0';
       //cout << "le nom est :" << nom << endl;
-      racine = new node(*hauteur, *angleXY, *angleZ, true, nom, racineF);
+      // racine = new node(*hauteur, *angleXY, *angleZ, true, nom, racineF);
       //etageF.push_back(racine);
+      delete tmpTabF;
       delete nom;
     }
   }
-  /*cout << "etageF = " << endl;
+  /*
+  cout << "etageF = " << endl;
   for(int i = 0; i<etageF.size();i++)
   {
     cout << etageF.at(i)->getName() << " x = " << etageF.at(i)->getX() << " y = " << etageF.at(i)->getY() << endl;
   }
   */
-  //cout << " rajout de " << axiomeDeBase[0];
-
-  //affichageGraphique(etageF.at(0));
+  // cout << " rajout de " << axiomeDeBase[0];
+  // affichageGraphique(etageF.at(0));
 
 }

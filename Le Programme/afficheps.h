@@ -8,9 +8,10 @@
 #include <vector>
 #include <fstream>
 #include <vector>
-#include <math.h>//permet d'utiliser sqrt
 #include <time.h>
 
+#define XMAX 792
+#define YMAX 612
 
 void affichageGraphique(node* root);
 

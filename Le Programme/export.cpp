@@ -34,19 +34,6 @@ int recurExport(node* root, std::ofstream* output, int last)
   }
   return last;
 }
-/*
-void exportObj(node* root, std::string filename)
-{
-  std::ofstream output;
-  std::ostringstream tmpPath;
-  tmpPath << filename << ".obj";
-  output.open(tmpPath.str().c_str(),std::ios::out);
-  output << "o terTREE" << std::endl;
-  recurExport(root, &output, 1);
-  output.close();
-  std::cout << "Fin ecriture du .obj a " << tmpPath.str().c_str() << std::endl;
-}
-*/
 
 void exportObj(node* root)
 {

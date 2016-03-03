@@ -1,20 +1,8 @@
 #include "afficheps.h"
 
-#include "node.h"
-#include <iostream>
-#include <cstdlib>
-#include <vector>
-#include <fstream>
-#include <math.h>//permet d'utiliser sqrt
-#include <vector>
-#include <time.h>
-
-#define XMAX 792
-#define YMAX 612
-
 void afficheVector(node *racine, std::ofstream* output)
  {
-//   //std::cout<<"affichage graphique :"<<std::endl;
+//   // std::cout<<"affichage graphique :"<<std::endl;
 //   if(racine->getEnfants()->size() > 0)
 //   {
 //     for(int k = 0; k < racine->getEnfants()->size(); ++k)
@@ -23,7 +11,7 @@ void afficheVector(node *racine, std::ofstream* output)
 //     }
 //   }
 //   *output << racine->getX() << " " << racine->getY() << " 3 0 360 arc" << std::endl;
-//   //std::cout<<"boucle :x= "<<racine->getX()<<" et y= "<< racine->getY() <<std::endl;
+//   // std::cout<<"boucle :x= " << racine->getX()<<" et y= " << racine->getY() << std::endl;
 //   *output << "0 setgray" << std::endl;
 //   *output << "fill" << std::endl;
 //   *output << "stroke"<< std::endl;
