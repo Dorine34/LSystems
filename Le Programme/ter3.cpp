@@ -1,10 +1,10 @@
-/****************Faire Pousser des Arbres en Pogrammant*************/
-/* Fait le 20/02
-/*
-/* Petite coquille avec les ordonnées
-/*
-/*
-/*****************Yin, Arcadia et Oxidire*******************/
+/****************Faire Pousser des Arbres en Pogrammant
+ * Fait le 20/02
+ *
+ * Petite coquille avec les ordonnées
+ *
+ *
+ *****************Yin, Arcadia et Oxidire*******************/
 
 
 #include <iostream>
@@ -21,8 +21,6 @@
 #include "export.h"
 
 using namespace std;
-
-
 
 int main(int argc, char** argv)
 {
@@ -61,7 +59,7 @@ int main(int argc, char** argv)
   lectureReglesF(filenameF, &motsP, &reglesP, &angleXY, &angleZ, &poids, &hauteur, &axiomeDeBase);
 
   cout << endl << "tableau enregistre :" << endl;
-  for(int j  = 0; j<reglesP.size(); j++)
+  for(unsigned int j  = 0; j < reglesP.size(); j++)
   {
     cout << "j = " << j << " motsP = " << motsP[j] << " -> " << reglesP[j].getString() << "de probabilite" << reglesP[j].getProbabilite() << endl;
   }
@@ -81,7 +79,7 @@ int main(int argc, char** argv)
     {
       createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit de l'arbre qui donnera le mot
     }
-    for (int i = 0; i < etageF.size(); ++i)
+    for (unsigned int i = 0; i < etageF.size(); ++i)
     {
       delete etageF.at(i);
     }
@@ -124,7 +122,7 @@ int main(int argc, char** argv)
     delete(etageF.at(i));
   }
   */
-  for (int i = 0; i < etageF.size(); ++i)
+  for (unsigned int i = 0; i < etageF.size(); ++i)
   {
     delete etageF.at(i);
   }

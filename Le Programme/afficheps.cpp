@@ -30,7 +30,7 @@ void cherche_lgla(node *racine){ //lgla : longueur largeur
    else if(racine->getY() > yma)
      yma = racine->getY();
   if(racine->getEnfants()->size() > 0)
-    for(int k = 0; k < racine->getEnfants()->size(); ++k)
+    for(unsigned int k = 0; k < racine->getEnfants()->size(); ++k)
       cherche_lgla(racine->getEnfants()->at(k));
 }
 
@@ -55,8 +55,8 @@ void coef(node* racine, std::ofstream* output){
     // std::cout << "Y : " << (ytot/2)/coeff + decaY << " =? " << YMAX/2 << std::endl;
     // std::cout << "X : " << (xtot/2)/coeff + decaX << " =? " << XMAX/2 << std::endl;
 
-    double Ycentered = (ytot/2)/coeff + decaY;
-    double Xcentered = (xtot/2)/coeff + decaX;
+    // double Ycentered = (ytot/2)/coeff + decaY;
+    // double Xcentered = (xtot/2)/coeff + decaX;
 /*
     *output << lround(YMAX/2) - 5 << " "
             << lround(XMAX/2) << " moveto" << std::endl;

@@ -70,7 +70,7 @@ std::vector<std::string> Rules::getRules()
 
 void Rules::setRules(std::vector<std::string> ru)
 {
-  for (int i = 0; i < ru.size(); ++i)
+  for (unsigned int i = 0; i < ru.size(); ++i)
   {
     rules.push_back(ru.at(i));
   }
@@ -203,7 +203,7 @@ void Rules::write()
           << "largeur=" << largeur << "." << std::endl
           << "longueur=" << longueur << "." << std::endl
           << axiom << "." << std::endl;
-  for (int i = 0; i < rules.size(); ++i)
+  for (unsigned int i = 0; i < rules.size(); ++i)
   {
     outfile << rules.at(i) << "." << std::endl;
   }
@@ -226,7 +226,7 @@ void Rules::printVar()
     std::cout << axiom  << std::endl;
   }
   std::cout << "Regles" << std::endl;
-  for (int i = 0; i < rules.size(); ++i)
+  for (unsigned int i = 0; i < rules.size(); ++i)
   {
     std::cout << "\tRegle "<< i <<" : " << rules.at(i) << std::endl;
   }

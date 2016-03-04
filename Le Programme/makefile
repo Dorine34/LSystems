@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++14 -g -Wall -ansi
+CFLAGS = -g -Wall -ansi -pedantic -std=c++14
 LDFLAGS =
 objects = ter3.o node.o afficheps.o creation.o probabilite.o export.o
 executable = ter1
@@ -9,7 +9,7 @@ all: executable
 executable: $(objects)
 	$(CC) $(objects) -o $(executable)
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) -o $@ -c $(CFLAGS) $<
 
 clean:

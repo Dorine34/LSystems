@@ -79,7 +79,7 @@ node::node(double distance, double angleXY, double angleZ,
     int nbVraisEnfants = 0;
     double nouveauPoids = this->pere->getPoids();
     //std::cout<<"Bonjour, je suis : "<<this->getName() << " Mon pere est" << this->pere->getName()[0] <<"et pese :"<<nouveauPoids<<std::endl;
-     for (int i = 0; i < this->pere->getEnfants()->size(); ++i)
+     for (unsigned int i = 0; i < this->pere->getEnfants()->size(); ++i)
     {
       //std::cout << "Mon frere  " << this->pere->getEnfant(i)->getName()[0];
       //std::cout << "mes freres sont :";
@@ -92,7 +92,7 @@ node::node(double distance, double angleXY, double angleZ,
       //std::cout<<std::endl<<" J'en ai donc :"<<nbVraisEnfants<<std::endl;
     }
 
-     for (int i = 0; i < this->pere->getEnfants()->size(); ++i)
+     for (unsigned int i = 0; i < this->pere->getEnfants()->size(); ++i)
     {
 
       if(((this->pere->getEnfant(i)->getName()[0] > 64) && (this->pere->getEnfant(i)->getName()[0] < 91))
@@ -255,7 +255,7 @@ void node::setPere(node* pere)
 
 node* node::getEnfant(int index)
 {
-  if(0 <= index && index < this->enfants->size())
+  if(0 <= index && (unsigned)index < this->enfants->size())
   {
     return this->enfants->at(index);
   }
@@ -273,7 +273,7 @@ std::vector<node*>* node::getEnfants()
 void node::setEnfants(std::vector<node*> *enfants)
 {
   this->enfants = enfants;
-  for(int i = 0; i < this->enfants->size(); ++i)
+  for(unsigned int i = 0; i < this->enfants->size(); ++i)
   {
     this->enfants->at(i)->setPere(this);
   }

@@ -179,7 +179,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   cout << "Bienvenue dans le createTreeRankByRankF" << endl;
   ostringstream a;
   /*
-  for(int j = 0; j < (*reglesP).size(); j++)
+  for(unsigned int j = 0; j < (*reglesP).size(); j++)
   {
     cout << "j = " << j << " motsP = " << (*motsP)[j] << " -> " << (*reglesP)[j].getString()
          << "de probabilite" << (*reglesP)[j].getProbabilite() << endl;
@@ -193,7 +193,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   vector<node*> etageSuivant;
   char *tmpTab = new char[2];
   // cout << "je suis ici" << endl;
-  for(int i = 0; i < (*etageF).size(); ++i)
+  for(unsigned int i = 0; i < (*etageF).size(); ++i)
   {
     char x = (*etageF).at(i)->getName()[0];
     //cout <<endl<<endl<< "etape1 : x correspond a" << (*etageF).at(i)->getName() << endl;
@@ -285,7 +285,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   }
   // cout << endl;
   etageF->clear();
-  for(int i = 0; i < etageSuivant.size(); ++i)
+  for(unsigned int i = 0; i < etageSuivant.size(); ++i)
   {
     etageF->push_back(etageSuivant.at(i));
   }
@@ -388,7 +388,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
   // cout << "main :x = " << racineR->getX() << " et y = " << racineR->getY() << endl;
   affichageGraphique(racineR);
   exportObj(racineR);
-  for (int i = 0; i < etageR.size(); ++i)
+  for (unsigned int i = 0; i < etageR.size(); ++i)
   {
     delete etageR.at(i);
   }
@@ -471,7 +471,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
 {
   char motRacineF;
   node* racineF;
-  node *racine;
+  // node *racine;
   if(axiomeDeBase->size() == 1)
   {
     motRacineF = (*axiomeDeBase)[0];
@@ -503,7 +503,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
       int n = 0;
       double inclinaisonXY = 0;
       double inclinaisonZ = 0;
-      while(n<axiomeDeBase->size())
+      while((unsigned)n < axiomeDeBase->size())
       {
         nom[m] = (*axiomeDeBase)[n];
         //cout << "nom[m] = " << nom[m] << endl;
@@ -564,7 +564,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
   }
   /*
   cout << "etageF = " << endl;
-  for(int i = 0; i<etageF.size();i++)
+  for(unsigned int i = 0; i<etageF.size();i++)
   {
     cout << etageF.at(i)->getName() << " x = " << etageF.at(i)->getX() << " y = " << etageF.at(i)->getY() << endl;
   }
