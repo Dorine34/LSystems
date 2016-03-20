@@ -39,10 +39,19 @@ public:
   double getInclinaisonZ();
   void setInclinaisonZ(double);
 
+
+  double getAngleXY();
+  void setAngleXY(double);
+
+  double getAngleZ();
+  void setAngleZ(double);
+  
+
   node* getPere();
   void setPere(node*);
 
   node* getEnfant(int);
+  void voirEnfant();
   std::vector<node*>* getEnfants();
   void setEnfants(std::vector<node*>*);
 

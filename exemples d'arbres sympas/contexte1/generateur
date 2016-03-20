@@ -1,0 +1,8 @@
+angleXY=20.
+angleZ=0.
+largeur=1.
+longueur=10.
+contexte=FF<F=[-A[-B]C].
+G.
+G=DDDDF.
+F=F[+F][-F[-F]F]F[+F][-F].

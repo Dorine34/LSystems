@@ -1,5 +1,10 @@
 #include "creation.h"
 
+
+/**********
+partie avec les contextes est a verifier
+surtour qu'ils n heritent pas des enfants du pere
+**************/
 double puissanceMoins10(double x, int p)
 {
   for(int i = 0; i < p; i++)
@@ -15,7 +20,7 @@ angleXY : l'angleXY de rotation
 axiome de base : le premier axiome
 **/
 // permet de faciliter l acces aux regles
-void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *reglesP, double *angleXY, double *angleZ, double *poids, double *hauteur, string *axiomeDeBase)
+void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *reglesP,  vector<Contexte> *contextes, double *angleXY, double *angleZ, double *poids, double *hauteur, string *axiomeDeBase)
 {
   // cout << "bienvene dans lectureReglesF" << endl;
   int cpt = 0;
@@ -34,6 +39,8 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
   bool angleZFait = false;
   bool poidsArbreFait = false;
   bool longueurBrancheFait = false;
+  bool contexteFait = false;
+
 
   while(getline(file, line))
   {
@@ -44,7 +51,7 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
       if(!angleXYFait)
       {
         // cout << "line[" << k << "]=" << line[k] << endl;
-        if((k >= 8) && (line[k] != '.'))// recupere la premiere donnee correspondant à l'angleXYXY
+        if((k >= 8) && (line[k] != '.'))// recupere la premiere donnee correspondant Ã  l'angleXYXY
         {
           *angleXY = (*angleXY) * 10 + line[k] - 48;
         }
@@ -56,9 +63,9 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
       }
       else
       {
-        if(!angleZFait)// recupere la premiere donnee correspondant à l'angleXYXY
+        if(!angleZFait)// recupere la premiere donnee correspondant Ã  l'angleXYXY
         {
-          if((k >= 7) && (line[k] != '.'))// recupere la premiere donnee correspondant à l'angleXYXY
+          if((k >= 7) && (line[k] != '.'))// recupere la premiere donnee correspondant Ã  l'angleXYXY
             {
               *angleZ = (*angleZ) * 10 + line[k] - 48;
             }
@@ -73,7 +80,7 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
           if(!poidsArbreFait)
           {
           // cout << "line[" << k << "]=" << line[k] << endl;
-            if((k>=8)&&(line[k] != '.'))// recupere la premiere donnee correspondant à l'angleXYXY
+            if((k>=8)&&(line[k] != '.'))// recupere la premiere donnee correspondant Ã  l'angleXYXY
             {
               *poids = (*poids) * 10 + line[k] - 48;
             }
@@ -84,11 +91,11 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
             }
           }
           else
-            {
+          {
             if(!longueurBrancheFait)
               {
                 // cout << "line[" << k << "]=" << line[k] << endl;
-                if((k >= 9) && (line[k] != '.'))// recupere la premiere donnee correspondant à l'angleXYXY
+                if((k >= 9) && (line[k] != '.'))// recupere la premiere donnee correspondant Ã  l'angleXYXY
                 {
                   *hauteur = (*hauteur) * 10 + line[k] - 48;
                 }
@@ -98,65 +105,125 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
                   // cout << "hauteur=" << *hauteur << endl;
                 }
               }
-            else{
-              if(line[k] == '(')// cas probabiliste qui commence par une parenthese
+            else
+            {
+              if(!contexteFait)
               {
-                // cout << "cas probabiliste" << endl;
-                k++;
-                while(((line[k] >= '0')&&(line[k] <= '9')) || (line[k] == ','))
+                if ((k >= 9) && (line[k] != '.'))
                 {
-                  if(line[k] == ',')
+                  Contexte co ("",0,"");
+                  bool baseFaite=false;
+                  bool fait =false;
+                  int pos=k;
+                  while ((line[k] != ',') && (line[k] != '.'))
                   {
+                    //cout<<"line[k]= "<<line[k]<<"et pos= "<<pos<< "et k-pos="<<k-pos<<endl;
+                    if (line[k] == '=')
+                    {
+                      baseFaite = true;
+                    }
+                    if (!baseFaite)
+                    {
+                      if ((line[k] != '>')&&(line[k] != '<'))
+                      {
+                        co.ajoutReglesAnciennes(line[k]);
+                        //cout<<"line[k]= "<<line[k]<<"et pos= "<<pos<< "et k-pos="<<k-pos<<endl;
+                      }
+                      else
+                      {
+                        if (line[k] == '<')
+                        {
+                          pos-=1;
+                          //cout<<" pas augmente de 1 cas < : k-pos="<<k-pos<<endl;
+                          co.setPosDuCaractere(k-pos);
+                          fait =true;
+                        }
+                        if ((line[k] == '>')&&(fait==false))
+                        {
+                          //cout<<"cas > : k-pos="<<k-pos<<endl;
+                          co.setPosDuCaractere(k-pos);
+                        }
+                      }
+                    }
+                    else
+                    {
+                      if (line[k] != '=')
+                      {
+                        //cout<<" co ="<<co.getReglesNouvelles()<<endl;
+                        co.ajoutReglesNouvelles(line[k]);
+                        //cout<<"ajout de k="<<k<<" correspondant a "<<line[k]<<endl;
+                      }
+                    }
                     k++;
                   }
-                  probabilite = probabilite * 10 + line[k] - 48;// recuperation de la probabilite en entier
-                  cpt++;
-                  k++;
+                  contextes->push_back(co);
                 }
-                probabilite = puissanceMoins10(probabilite, cpt - 1);// probabilite en double
-                // cout << "La probabilite = " << probabilite << endl;
-                Probabilite p1(probabilite, "");// creation de probabilite
-                probabilite = 0;
-                cpt = 0;
-                (*motsP).push_back(line[k + 1]);
-                // cout << "cas () rajout de " << line[k+1] << endl;
-                while(line[k] != '.')// pointeur dur la fin de la ligne
+                if(line[k] == '.')
                 {
-                  k++;
+                  contexteFait = true;
                 }
-                int deb = line.find('=') + 1;
-                p1.setString(line.substr(deb, k - deb));
-                (*reglesP).push_back(p1);
               }
               else
               {
-                if(line[k] == '=') // cas normal, non probabiliste
+                if(line[k] == '(')// cas probabiliste qui commence par une parenthese
                 {
-                  (*motsP).push_back(line[0]);
-                  // cout << "cas = rajout de " << line[0] << endl;
-                  b = true;
-                }
-                else
-                {
-                  if(line[k] == '.')
+                  // cout << "cas probabiliste" << endl;
+                  k++;
+                  while(((line[k] >= '0')&&(line[k] <= '9')) || (line[k] == ','))
                   {
-                    if(b)
-                    {
-                      int beg = line.find('=') + 1;
-                      Probabilite p1(1, line.substr(beg, k - beg));
-                      (*reglesP).push_back(p1);
-                    }
-                  }
-                  if(!premierAxiome)
-                  {
-                    premierAxiome = true;
-                    while(line[k] != '.')// pointeur dur la fin de la ligne
+                    if(line[k] == ',')
                     {
                       k++;
                     }
-                    // cout << "axiome de base = " << line.substr(0, k);
-                    *axiomeDeBase = line.substr(0, k);
-                    // cout << "la ligne oubliee selon 1 est" << line << endl;
+                    probabilite = probabilite * 10 + line[k] - 48;// recuperation de la probabilite en entier
+                    cpt++;
+                    k++;
+                  }
+                  probabilite = puissanceMoins10(probabilite, cpt - 1);// probabilite en double
+                  // cout << "La probabilite = " << probabilite << endl;
+                  Probabilite p1(probabilite, "");// creation de probabilite
+                  probabilite = 0;
+                  cpt = 0;
+                  (*motsP).push_back(line[k + 1]);
+                  // cout << "cas () rajout de " << line[k+1] << endl;
+                  while(line[k] != '.')// pointeur dur la fin de la ligne
+                  {
+                    k++;
+                  }
+                  int deb = line.find('=') + 1;
+                  p1.setString(line.substr(deb, k - deb));
+                  (*reglesP).push_back(p1);
+                }
+                else
+                {
+                  if(line[k] == '=') // cas normal, non probabiliste
+                  {
+                    (*motsP).push_back(line[0]);
+                    // cout << "cas = rajout de " << line[0] << endl;
+                    b = true;
+                  }
+                  else
+                  {
+                    if(line[k] == '.')
+                    {
+                      if(b)
+                      {
+                        int beg = line.find('=') + 1;
+                        Probabilite p1(1, line.substr(beg, k - beg));
+                        (*reglesP).push_back(p1);
+                      }
+                    }
+                    if(!premierAxiome)
+                    {
+                      premierAxiome = true;
+                      while(line[k] != '.')// pointeur dur la fin de la ligne
+                      {
+                        k++;
+                      }
+                      // cout << "axiome de base = " << line.substr(0, k);
+                      *axiomeDeBase = line.substr(0, k);
+                      // cout << "la ligne oubliee selon 1 est" << line << endl;
+                    }
                   }
                 }
               }
@@ -174,17 +241,18 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
 }
 
 
-void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ, double hauteur, vector<char> *motsP, vector<Probabilite> *reglesP, double poids)
+void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ, double hauteur,
+                                  vector<char> *motsP, vector<Probabilite> *reglesP, double poids,
+                                   vector<Contexte> *contextes)
 {
   cout << "Bienvenue dans le createTreeRankByRankF" << endl;
   ostringstream a;
-  /*
+
   for(unsigned int j = 0; j < (*reglesP).size(); j++)
   {
     cout << "j = " << j << " motsP = " << (*motsP)[j] << " -> " << (*reglesP)[j].getString()
          << "de probabilite" << (*reglesP)[j].getProbabilite() << endl;
   }
-  */
   srand(time(NULL));
   double r = rand()%(10) + 1;
   r = r/10;
@@ -285,13 +353,233 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   }
   // cout << endl;
   etageF->clear();
+
   for(unsigned int i = 0; i < etageSuivant.size(); ++i)
   {
     etageF->push_back(etageSuivant.at(i));
+    //cout<<"etageSuivant i ="<<(etageSuivant.at(i));
   }
-  cout << " a = " << a.str() << endl;
-  PreparationArbre(a.str(), angleXY, angleZ, hauteur, poids);
+  /************Partie Contexte**************/
+  //cout << " a = " << a.str() << endl;
+  int cpt=a.str().length();
+  int chch=0;
+  string c;
+  c=a.str();
+  cout<<"pour la regle :"<<(*contextes)[0].toString();
+  while (cpt>=0)
+  {
+    chch =rechercheContextes(etageF,c,cpt,contextes, hauteur);
+    cpt--;
+  }
+  //cout << "apres les operations, on a : c = " << c << endl;
+
+
+
+
+
+/************ Fin Partie Contexte**************/
+
+  PreparationArbre(c, angleXY, angleZ, hauteur, poids, contextes);
   // cout << "au revoir de createTreeRankByRankF" << endl;
+}
+
+void insereRN(string &a, int base, vector<Contexte> * contextes, int i)
+{
+  //cout <<"bienvenue dans aInserer"<<endl;
+  string Ainserer=(*contextes)[i].getReglesNouvelles();
+  //cout<< "a inserer="<<Ainserer << endl;
+  ostringstream o;
+  for (unsigned int i=0; i<base; i++)
+  {
+    o<<a[i];
+  }
+  for (unsigned int i=0; i<Ainserer.length(); i++)
+  {
+    o<<Ainserer[i];
+  }
+  
+  for (unsigned int i=base+1; i<a.length(); i++)
+  {
+    o<<a[i];
+  }
+  a=o.str();
+
+}
+
+int rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Contexte> * contextes, int hauteur){
+  //cout<< "Bienvenue dans rechercheContextes :"<<endl;
+  char *tmpTab = new char[2];
+  int j=1;
+  int base=1;
+  /*
+  cout<<"etageF="<<endl;
+  for (unsigned int i=0; i<etageF->size();i++)
+  {
+      cout<<(*etageF)[i]->getName()<<"  ";
+  }
+  cout<<endl;
+  */
+  for (unsigned int i=0; i<contextes->size();i++)
+  {
+    if (((*contextes)[i].getReglesAnciennes()[0])==a[cpt])
+    {
+      //cout<<endl<<"Bravo, les premiers elements concordent !"<<endl;
+      if (((*contextes)[i].getReglesAnciennes()).length()==1)
+      {
+        //cout<<"cas où regles anciennes ==1";
+        //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());        
+        //cout<<"Dans contextes :(*contextes)[i].getPosDuCaractere()+cpt-2="<<(*contextes)[i].getPosDuCaractere()+cpt-2<<endl;
+        insereRN(a,base,contextes,i);
+      } 
+      else
+      {
+        cpt++;
+        //base=cpt;
+        //cout mettre un while qd le remplacement sera fait
+        while (verificationContexteString (a,cpt, contextes, i, j, &base))
+        {
+          //cout<<endl<<"YOUPI,cpt="<<cpt<<" et base="<< base<<endl;
+          //cout<<"Remplacement de"<<a[base]<< " au niveau :"<<base<<endl;
+          //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());        
+          insereRN(a,base,contextes,i);  
+          //cout<<"a apres remplacement"<<a<<" et base2="<<base<<endl;
+          /*
+          cout<<"cas1: base="<<base<<endl;
+          cout<<"etageF :"<<(*etageF)[base]->getName()<<endl;
+          */
+
+          /**Remplacement dans etageF**/
+          vector<node*> etageSuivant;
+          int k=0;
+          while(k<base)
+          {
+            //cout<<(*etageF)[k]->getName()<<" ";
+            etageSuivant.push_back((*etageF)[k]);
+            k++;
+          }
+          node* enfant;
+          node*test;
+          while (k<(*contextes)[i].getReglesNouvelles().length()+base)
+          {
+          
+            tmpTab[0] = a[k] ;
+            tmpTab[1] = '\0';
+            enfant = new node(hauteur, (*etageF)[0]->getInclinaisonXY(), (*etageF)[0]->getInclinaisonZ(), true,tmpTab ,test);  
+            //cout<<(enfant)->getName()<<" ";
+            etageSuivant.push_back(enfant);
+            k++;
+          }
+          
+          while (k<(*contextes)[i].getReglesNouvelles().length()+(*etageF).size()-1)
+          {
+            //cout<<(*etageF)[k-(*contextes)[i].getReglesNouvelles().length()+1]->getName()<<" ";
+            etageSuivant.push_back((*etageF)[k-(*contextes)[i].getReglesNouvelles().length()+1]);
+            k++;
+          }
+          // cout << endl;
+          etageF->clear();
+          etageF->push_back(etageSuivant[0]);
+          for(unsigned int i = 1; i < etageSuivant.size(); ++i)
+          {
+            etageSuivant[i]->setPere(etageSuivant[i-1]);
+            etageF->push_back(etageSuivant.at(i));
+          }          
+          /***/
+          base=1;
+        }
+      }
+    }
+  }
+}
+
+bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes, int i, int j, int *base)
+{
+  //cout<<"Bienvenue dans verificationContexteString avec "<<a[cpt]<<"base="<<(*base)<< ", cpt="<< cpt<< "et RA= "<< (*contextes)[i].getReglesAnciennes()[j]<< "et j="<< j<<endl;
+  //(*base)=j;
+  while (cpt<a.length())
+  {
+    if (j==(*contextes)[i].getReglesAnciennes().length())
+    {
+      return true;
+    }
+    if(((a[cpt] >= 'A') && (a[cpt] <= 'Z'))
+      || ((a[cpt] >= 'a') && (a[cpt] <= 'z')))
+    {
+      //cout<<"C'est une lettre ! a[cpt]= "<<a[cpt]<<"avec cpt="<<cpt<<endl;
+      if ( (a[cpt]==(*contextes)[i].getReglesAnciennes()[j]))
+      {
+        //cout<<"cpt="<< cpt<<", base="<<(*base)<<"j="<<j<<" et position du caractere="<<(*contextes)[i].getPosDuCaractere()<<endl;
+        
+        if ((*contextes)[i].getPosDuCaractere()>(*base))
+        {
+          //cout<<endl<<"base  ("<<(*base)<<"<"<<(*contextes)[i].getPosDuCaractere()<<"donc base augmente de 1"<<endl;
+          (*base)++;
+        }
+        if ((*contextes)[i].getPosDuCaractere()==(*base))
+        {
+          //cout<<"base a le bon nombre de lettre donc base= cpt)"<<cpt<<endl;;
+          (*base)=cpt;
+        }
+      
+        //cout<<"c'est la même lettre !"<<endl;
+        j++;
+        cpt++;
+      }
+      else
+      {
+        //cout<<"c'est faux avec "<<a[cpt]<<endl;
+        return false;
+      }
+    }
+    else
+    {
+      if (a[cpt]=='[')
+      {
+        cpt++;
+        //cout<<"c'est un [, on boucle avec cpt="<<cpt<< " i= "<<i<<"j="<<j<<endl;
+        if( verificationContexteString(a,cpt, contextes,i,j, base))
+        {
+          //cout<<endl<<"YOUPI ca marche ! (cpt="<<cpt<<" et base="<<(*base)<<endl;
+          return true; 
+        }
+        else
+        {
+          int nbParOuvrante=1;
+          int nbParFermante=0;
+          while (nbParFermante != nbParOuvrante)
+          {
+            if (a[cpt]==']')
+            {
+              nbParFermante++;
+            }
+            if (a[cpt]=='[')
+            {
+              nbParOuvrante++;
+            }
+            cpt++;
+          }
+        }
+      }
+      else
+      {
+        //cout<<"on est ici 5"<<endl;
+        if (a[cpt]==']')
+        {
+          //cout<<"on est ici 6"<<endl;
+          return false;
+        }
+        else
+        {
+          //cout<<"Hello : on a a[cpt]="<<a[cpt]<<"cpt="<<cpt+1<<"et "<<1<<endl;
+          cpt++;
+        }
+        //cout<<"on est ici 1"<<endl;
+      }
+      //cout<<"on est ici 2"<<endl;
+    }
+    //cout<<"on est ici 3"<<endl;
+  }
+  return false;
 }
 
 /**************************
@@ -305,8 +593,9 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
 *************/
 
 // a represente une ligne de caracteres
-void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, double poids)
+void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, double poids, vector<Contexte> *contextes)
 {
+  cout<<"entree dans prepration arbre avec a="<<a<<endl;  
   vector<node*> etageR; // etages dans la lecture du mot
   //cout << "entree dans preparationArbre avec angleXY=" <<angleXY<<"et angleZ="<<angleZ<< endl;
   int m = 0;
@@ -316,7 +605,6 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
     if(((a[m] >= 'A') && (a[m] <= 'Z'))
     || ((a[m] >= 'a') && (a[m] <= 'z')))
     {
-      //cout << a[m];
       cpt++;
     }
     m++;
@@ -386,6 +674,8 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
     m++;
   }
   // cout << "main :x = " << racineR->getX() << " et y = " << racineR->getY() << endl;
+  //contextesLies( racineR, contextes);
+
   affichageGraphique(racineR);
   exportObj(racineR);
   for (unsigned int i = 0; i < etageR.size(); ++i)
@@ -399,7 +689,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
 
 /**********************
 *arbre pere permet de creer l'arbre a partie d'un mot
-*chaque noeud de l'arbre a des caracteristiques spécifiqués héritées du mot
+*chaque noeud de l'arbre a des caracteristiques spÃ©cifiquÃ©s hÃ©ritÃ©es du mot
 *
 ***********/
 //dans les cas des []
@@ -439,7 +729,7 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
     }
     if(a[m] == '\\')//utilisation de l'ascii car '\' fait des choses bizarres
     {
-      //cout <<"avec a[m]="<<a[m]<< "l'inclinaisonZ était :" << inclinaisonZ;
+      //cout <<"avec a[m]="<<a[m]<< "l'inclinaisonZ Ã©tait :" << inclinaisonZ;
       inclinaisonZ -= angleZ;
       //cout << "et  devient :" << inclinaisonZ << endl;
     }
@@ -464,8 +754,7 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
 }
 /******
 Mais a quoi sert premierAxiome ?
-lors des premiers axiomes multiples,
-A par
+lors des premiers axiomes multiples
 ****/
 void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double* angleXY, double* angleZ, vector<node*>*etageF)
 {
@@ -539,7 +828,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
             inclinaisonZ += *angleZ;
             //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;
           }
-          if(nom[m] == '\\')//utilisation de l'ascii car '\' fait des choses bizarres
+          if(nom[m] == '\\')
           {
             inclinaisonZ -= *angleZ;
             //cout << "l'inclinaisonZ devient :" << inclinaisonZ << endl;

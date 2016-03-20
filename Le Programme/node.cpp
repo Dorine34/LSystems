@@ -173,6 +173,15 @@ void node::ajoutEnfant(node* enfant)
   enfant->setPere(this);
 }
 
+void node::voirEnfant()
+{
+  for (int i=0; i<(*enfants).size(); i++)
+  {
+    std::cout<<(*enfants)[i]->getName()<<" ";
+  }
+  std::cout<<std::endl;
+}
+
 char* node::getName()
 {
   return this->name;
@@ -204,6 +213,25 @@ void node::setX(double x)
 {
   this->x = x;
 }
+double node::getAngleXY()
+{
+  return this->angleXY;
+}
+void node::setAngleXY(double a)
+{
+  this->angleXY=a;
+}
+
+double node::getAngleZ()
+{
+  return this->angleZ; 
+}
+
+void node::setAngleZ(double a)
+{
+  this->angleZ=a;
+}
+
 
 double node::getY(){
   return this->y;

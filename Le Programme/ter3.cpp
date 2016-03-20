@@ -24,10 +24,11 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  cout << "Bonjour camarades!" << endl;//message de convivialité (parce que c'est important la convivialite)
+  cout << "Bonjour camarades !" << endl;//message de convivialité (parce que c'est important la convivialite)
 
   vector<node*> etageF;//etages selon le rang de creation du mot
   vector<Probabilite> reglesP;// contraintes rangees par domaine
+  vector<Contexte> contextes;// contexte sensitif
   vector<char> motsP;//les mots formes a partir de probabilite
   char* filenameF = new char[11];
   sprintf(filenameF, "generateur.txt");
@@ -56,13 +57,20 @@ int main(int argc, char** argv)
   double poids;
   double hauteur;
 
-  lectureReglesF(filenameF, &motsP, &reglesP, &angleXY, &angleZ, &poids, &hauteur, &axiomeDeBase);
+  lectureReglesF(filenameF, &motsP, &reglesP, &contextes, &angleXY, &angleZ, &poids, &hauteur, &axiomeDeBase);
 
+  cout << endl << "contexte enregistre :" << endl;
+  for(unsigned int j  = 0; j < contextes.size(); j++)
+  {
+    cout << "j = " <<j <<" et"<<contextes[j].toString()<<endl;
+  }
+  /*
   cout << endl << "tableau enregistre :" << endl;
   for(unsigned int j  = 0; j < reglesP.size(); j++)
   {
     cout << "j = " << j << " motsP = " << motsP[j] << " -> " << reglesP[j].getString() << "de probabilite" << reglesP[j].getProbabilite() << endl;
   }
+  */
 
   cout << "angleXY = " << angleXY << " et angleZ = " << angleZ << endl;
   cout << "axiome de base = " << axiomeDeBase << "de taille :" << axiomeDeBase.size() << endl;
@@ -77,7 +85,9 @@ int main(int argc, char** argv)
     cout << arg << endl;
     for(int i = 0; i < arg; ++i)
     {
-      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit de l'arbre qui donnera le mot
+      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit de l'arbre qui donnera le mot
+      //contextLie(&etageF,&contextes);
+      //contextesLies(&etageF,&contextes);
     }
     for (unsigned int i = 0; i < etageF.size(); ++i)
     {
@@ -100,14 +110,20 @@ int main(int argc, char** argv)
       for(int i = 0; i<s;i++)
       {
         cout << endl << "Resultat : " << endl << endl;
-        createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit de l'arbre qui donnera le mot
+        createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit de l'arbre qui donnera le mot
+        //contextLie(&etageF,&contextes);
+        //contextesLies(&etageF,&contextes);
       }
+
       cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
       cin >> saisie;
     }
     else
     {//cas etage par etage
-      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids);//la creation en soit
+      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit
+      //contextLie(&etageF,&contextes);
+      //contextesLies(&etageF,&contextes);
+  
       cout << endl << "Resultat : " << endl ;
       cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
       cin >> saisie;
@@ -121,7 +137,7 @@ int main(int argc, char** argv)
     cout << etageF.at(i)->getName()[0] << " a un poids de " << etageF.at(i)->getPoids() << endl;
     delete(etageF.at(i));
   }
-  */
+  */  
   for (unsigned int i = 0; i < etageF.size(); ++i)
   {
     delete etageF.at(i);
