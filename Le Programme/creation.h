@@ -22,7 +22,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
 int arbrePere(int m, string a, node* pere, double angleXY,  double inclinaison, double angleZ, double inclinaisonZ, double hauteur);
 void premierAxiome ( string *axiomeDeBase, double * poids, double * hauteur, double * angleXY, double * angleZ, vector<node*> *etageF);
 
-int rechercheContextes(vector<node*> *etageF,string& a,int cpt, vector<Contexte> * contextes, int hauteur);
+void rechercheContextes(vector<node*> *etageF,string& a,int cpt, vector<Contexte> * contextes, int hauteur);
 bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes, int i, int j, int *base);
 void insereRN(string &a, int base, vector<Contexte> * contextes, int i);
 

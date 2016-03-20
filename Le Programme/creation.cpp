@@ -362,13 +362,12 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   /************Partie Contexte**************/
   //cout << " a = " << a.str() << endl;
   int cpt=a.str().length();
-  int chch=0;
   string c;
   c=a.str();
   cout<<"pour la regle :"<<(*contextes)[0].toString();
   while (cpt>=0)
   {
-    chch =rechercheContextes(etageF,c,cpt,contextes, hauteur);
+    rechercheContextes(etageF,c,cpt,contextes, hauteur);
     cpt--;
   }
   //cout << "apres les operations, on a : c = " << c << endl;
@@ -406,19 +405,11 @@ void insereRN(string &a, int base, vector<Contexte> * contextes, int i)
 
 }
 
-int rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Contexte> * contextes, int hauteur){
+void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Contexte> * contextes, int hauteur){
   //cout<< "Bienvenue dans rechercheContextes :"<<endl;
   char *tmpTab = new char[2];
   int j=1;
   int base=1;
-  /*
-  cout<<"etageF="<<endl;
-  for (unsigned int i=0; i<etageF->size();i++)
-  {
-      cout<<(*etageF)[i]->getName()<<"  ";
-  }
-  cout<<endl;
-  */
   for (unsigned int i=0; i<contextes->size();i++)
   {
     if (((*contextes)[i].getReglesAnciennes()[0])==a[cpt])
