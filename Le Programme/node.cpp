@@ -8,6 +8,7 @@ node::node()
   setInclinaisonXY(0);
   setInclinaisonZ(0);
   setPere(NULL);
+  setgravite(false);
   this->enfants = new std::vector<node*>();
   this->name = NULL;
   this->angleXY = 0;
@@ -16,7 +17,7 @@ node::node()
 
 node::node(node* pere, double x, double y, double z,
           double inclinaisonXY, double  inclinaisonZ,
-          char* name, double poids)
+          char* name, double poids, bool gravite)
 {
   std::cout<<"entree dans node ()"<<std::endl;
   this->angleXY = 0;
@@ -37,27 +38,21 @@ node::node(node* pere, double x, double y, double z,
   setInclinaisonXY(inclinaisonXY);
   setInclinaisonZ(inclinaisonZ);
   setPoids(poids);
+  setgravite(gravite);
   this->enfants = new std::vector<node*>();
 }
 
 node::node(double distance, double angleXY, double angleZ,
-          bool horaire, char* name, node* pere)
+          bool gravite, char* name, node* pere)
 {
   if(pere != NULL)
   {
-    int h;
-    if(horaire)
-    {
-      h = 0;
-    }
-    else
-    {
-      h = 1;
-    }
+    int h=1;
     this->pere = pere;
     this->angleXY = angleXY;
     this->angleZ = angleZ;
-    //this->angle -= 0.5 * (this->getPere()->angle);
+    this->gravite=gravite;
+    
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
 
@@ -142,7 +137,8 @@ node& node::operator=(const node &n)
   this->poids = n.poids;
   this->angleXY = n.angleXY;
   this->angleZ = n.angleZ;
-
+  this->gravite = n.gravite;
+  
   if(name != NULL)
   {
     delete name;
@@ -166,6 +162,17 @@ node& node::operator=(const node &n)
   }
   return *this;
 }
+
+bool node::getgravite()
+{
+  return gravite;
+}
+
+void node::setgravite(bool g)
+{
+  gravite=g;
+}
+
 
 void node::ajoutEnfant(node* enfant)
 {

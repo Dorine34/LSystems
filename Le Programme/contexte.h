@@ -14,7 +14,7 @@ class Contexte
 {
 public:
   Contexte();
-  Contexte(string, int, string);
+  Contexte(string, int, string, bool);
   ~Contexte();
 
   int getPosDuCaractere();
@@ -31,12 +31,15 @@ public:
 
   string toString();
   
+  bool getGravite();
+  void setGravite(bool);
+
 protected:
 
   string _reglesNouvelles;
   int _posDuCaractere;
   string _reglesAnciennes;
-  
+  bool _gravite;  
   };
 
 #endif

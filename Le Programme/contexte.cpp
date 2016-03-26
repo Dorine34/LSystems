@@ -6,13 +6,15 @@ Contexte::Contexte()
   _reglesNouvelles= 'A';
   _posDuCaractere= 0;
   _reglesAnciennes= 'A';
+  _gravite=false;
 }
 
-Contexte::Contexte(string rn, int a, string ra)
+Contexte::Contexte(string rn, int a, string ra, bool g)
 {
   _reglesNouvelles= rn;
   _posDuCaractere= a;
   _reglesAnciennes= ra;
+  _gravite=g;
 }
 
 Contexte::~Contexte(){}
@@ -54,10 +56,25 @@ void Contexte::ajoutReglesAnciennes(char c)
 {
   _reglesAnciennes+=c;
 }
+
+
+bool Contexte::getGravite()
+{
+  return _gravite; 
+}
+void Contexte::setGravite(bool g)
+{
+  _gravite=g;
+}
   
 string Contexte::toString()
 {
   ostringstream a;
-    a<<"l'ancienne regle"<<_reglesAnciennes<<" , la nouvelle regles "<<_reglesNouvelles<<" et la position :"<<_posDuCaractere<<endl; 
+    a<<"l'ancienne regle"<<_reglesAnciennes<<" , la nouvelle regles "<<_reglesNouvelles<<", la position :"<<_posDuCaractere;
+    if (_gravite)
+    {
+      a<<" et la gravite est enclenchee";
+    } 
+    a<<endl;
     return a.str(); 
 }

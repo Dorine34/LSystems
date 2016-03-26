@@ -13,7 +13,7 @@ class node
 {
 public:
   node();
-  node(node*, double, double,double, double, double, char*, double);
+  node(node*, double, double,double, double, double, char*, double, bool);
   node(double, double, double, bool, char*, node*);
   ~node();
 
@@ -58,12 +58,16 @@ public:
   double getPoids();
   void setPoids(double);
 
+  bool getgravite();
+  void setgravite(bool);
+  
 private:
   char* name;
   double x, y, z, inclinaisonXY, inclinaisonZ, poids;
   node* pere;
   std::vector<node*> *enfants;
   double angleXY, angleZ;
+  bool gravite;
 };
 
 #endif

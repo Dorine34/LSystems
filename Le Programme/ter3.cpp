@@ -1,10 +1,3 @@
-/****************Faire Pousser des Arbres en Pogrammant
- * Fait le 20/02
- *
- * Petite coquille avec les ordonnées
- *
- *
- *****************Yin, Arcadia et Oxidire*******************/
 
 
 #include <iostream>
@@ -30,6 +23,7 @@ int main(int argc, char** argv)
   vector<Probabilite> reglesP;// contraintes rangees par domaine
   vector<Contexte> contextes;// contexte sensitif
   vector<char> motsP;//les mots formes a partir de probabilite
+  vector<bool> svgGravite;
   char* filenameF = new char[11];
   sprintf(filenameF, "generateur.txt");
 
@@ -85,9 +79,7 @@ int main(int argc, char** argv)
     cout << arg << endl;
     for(int i = 0; i < arg; ++i)
     {
-      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit de l'arbre qui donnera le mot
-      //contextLie(&etageF,&contextes);
-      //contextesLies(&etageF,&contextes);
+      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes, &svgGravite);//la creation en soit de l'arbre qui donnera le mot      
     }
     for (unsigned int i = 0; i < etageF.size(); ++i)
     {
@@ -110,7 +102,7 @@ int main(int argc, char** argv)
       for(int i = 0; i<s;i++)
       {
         cout << endl << "Resultat : " << endl << endl;
-        createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit de l'arbre qui donnera le mot
+        createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes, & svgGravite);//la creation en soit de l'arbre qui donnera le mot
         //contextLie(&etageF,&contextes);
         //contextesLies(&etageF,&contextes);
       }
@@ -120,7 +112,7 @@ int main(int argc, char** argv)
     }
     else
     {//cas etage par etage
-      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes);//la creation en soit
+      createTreeRankByRankF(&etageF, angleXY, angleZ, hauteur, &motsP, &reglesP, poids, &contextes, &svgGravite);//la creation en soit
       //contextLie(&etageF,&contextes);
       //contextesLies(&etageF,&contextes);
   

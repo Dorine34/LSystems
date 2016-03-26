@@ -111,7 +111,14 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
               {
                 if ((k >= 9) && (line[k] != '.'))
                 {
-                  Contexte co ("",0,"");
+                  int gravite=false;
+                  if (line[k]=='g')
+                  {
+                    //cout<<" enclenchement de la gravite :";
+                    k++;
+                    gravite=true;
+                  }
+                  Contexte co ("",0,"", gravite);
                   bool baseFaite=false;
                   bool fait =false;
                   int pos=k;
@@ -243,9 +250,9 @@ void lectureReglesF(char *filenameF, vector<char> *motsP, vector<Probabilite> *r
 
 void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ, double hauteur,
                                   vector<char> *motsP, vector<Probabilite> *reglesP, double poids,
-                                   vector<Contexte> *contextes)
+                                   vector<Contexte> *contextes, vector<bool> *svgGravite)
 {
-  cout << "Bienvenue dans le createTreeRankByRankF" << endl;
+  //cout << "Bienvenue dans le createTreeRankByRankF" << endl;
   ostringstream a;
 
   for(unsigned int j = 0; j < (*reglesP).size(); j++)
@@ -263,6 +270,7 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   // cout << "je suis ici" << endl;
   for(unsigned int i = 0; i < (*etageF).size(); ++i)
   {
+    //cout<<"Bonjour !! l'inclinaison de "<< (*etageF).at(i)->getName()<<" est :"<<(*etageF).at(i)->getInclinaisonXY()<<endl;
     char x = (*etageF).at(i)->getName()[0];
     //cout <<endl<<endl<< "etape1 : x correspond a" << (*etageF).at(i)->getName() << endl;
     if((x == '[') || (x == ']')
@@ -274,24 +282,27 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
       tmpTab[0] = x;
       tmpTab[1] = '\0';
       a << x;
-      node *enfant = new node(hauteur, (*etageF).at(i)->getInclinaisonXY(), (*etageF).at(i)->getInclinaisonZ(), true, tmpTab, (*etageF).at(i));
+      node *enfant;
+      //cout<<endl<<endl<<"test1 avec"<<(*etageF).at(i)->getName()<<endl;
+      if ((*etageF).at(i)->getgravite())
+      {
+        //cout<<endl<<"l'arbre est sous le joug de la gravite"<<endl;
+        enfant = new node(hauteur, 180, (*etageF).at(i)->getInclinaisonZ(), true, tmpTab, (*etageF).at(i));
+      }
+      else
+      {
+        enfant = new node(hauteur, (*etageF).at(i)->getInclinaisonXY(), (*etageF).at(i)->getInclinaisonZ(), false, tmpTab, (*etageF).at(i));
+      }
       etageSuivant.push_back(enfant);
     }
     else
     {
-      // cout << "etape2a" << endl;
       int index = -1;
       for(unsigned int j = 0; j < (*motsP).size(); ++j)
       {
-        // cout << "etape3" << endl;
-        // cout << (*motsP).at(j) << " correspond a  " << (*etageF).at(i)->getName()[0] << endl;
         if((*motsP).at(j) == (*etageF).at(i)->getName()[0])
         {
           index = j;
-          /*
-          cout << "Trouve ! avec j = " << j << " motsP = " << (*motsP).at(j) << " et "
-              << (*etageF).at(i)->getName()[0] << " ===> " << (*reglesP).at(index).toString() << endl;
-          */
           break;
         }
       }
@@ -330,7 +341,18 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
             //cout << " le truc bizarre devient :" << (*reglesP).at(index).getString().at(j) << "venant de " << (*reglesP).at(index).getString() << endl;
             tmpTab[1] = '\0';
             a << (*reglesP).at(index).getString().at(j);
-            node *enfant = new node(hauteur,angleXY, angleZ, true, tmpTab, (*etageF).at(i));
+
+            node *enfant;
+            //cout<<endl<<"test3 avec"<<(*etageF).at(i)->getName()<<endl;
+            if ((*etageF).at(i)->getgravite())
+            {
+              //cout<<endl<<"l'arbre est sous le joug de la gravite"<<endl;
+              enfant = new node(hauteur, 180, angleZ, true, tmpTab, (*etageF).at(i));
+            }
+            else
+            {
+              enfant = new node(hauteur,angleXY, angleZ, false, tmpTab, (*etageF).at(i));
+            }
             etageSuivant.push_back(enfant);
           }
         }
@@ -343,8 +365,21 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
         // cout << " le truc bizarre devient :" << (*reglesP).at(index).getString().at(j) << "venant de " << (*reglesP).at(index).getString() << endl;
         tmpTab[1] = '\0';
         a << (*etageF).at(i)->getName()[0];
-        node *enfant = new node(hauteur, (*etageF).at(i)->getInclinaisonXY(), (*etageF).at(i)->getInclinaisonZ(), true,
+
+        node *enfant;
+        //cout<<endl<<"test1 avec"<<(*etageF).at(i)->getName()<<endl;
+
+        if ((*etageF).at(i)->getgravite())
+        {
+          //cout<<endl<<"l'arbre est sous le joug de la gravite"<<endl;
+          enfant = new node(hauteur, 180, (*etageF).at(i)->getInclinaisonZ(), true,
                                 tmpTab, (*etageF).at(i)->getPere());
+        }
+        else
+        {
+          enfant = new node(hauteur, (*etageF).at(i)->getInclinaisonXY(), (*etageF).at(i)->getInclinaisonZ(), false,
+                                tmpTab, (*etageF).at(i)->getPere());
+        } 
         etageSuivant.push_back(enfant);
       }
     }
@@ -364,21 +399,35 @@ void createTreeRankByRankF(vector<node*> *etageF, double angleXY, double angleZ,
   int cpt=a.str().length();
   string c;
   c=a.str();
-  cout<<"pour la regle :"<<(*contextes)[0].toString();
+  //cout<<"pour la regle :"<<(*contextes)[0].toString();
   while (cpt>=0)
   {
     rechercheContextes(etageF,c,cpt,contextes, hauteur);
     cpt--;
   }
-  //cout << "apres les operations, on a : c = " << c << endl;
-
-
-
-
+  cout << "apres les operations, on a : c = " << c << endl;
 
 /************ Fin Partie Contexte**************/
-
-  PreparationArbre(c, angleXY, angleZ, hauteur, poids, contextes);
+  svgGravite->clear();
+  for(unsigned int i = 0; i < (*etageF).size(); ++i)
+  {
+    /*
+    cout<<"l'inclinaison de "<< (*etageF).at(i)->getName()<<" est :"<<(*etageF).at(i)->getInclinaisonXY()
+    << "avec une gravite "<<(*etageF).at(i)->getgravite()
+    <<"et un pere"<<(*etageF).at(i)->getPere()->getName()<<endl;
+  */
+    svgGravite->push_back((*etageF).at(i)->getgravite());
+    //cout<<(*etageF).at(i)->getgravite()<<"rajoute"<<endl;
+  }
+  /*
+  cout<<"c="<<c<<"avec svg =";
+  for(unsigned int i = 0; i < (*etageF).size(); ++i)
+  {
+    cout<<(*svgGravite).at(i);
+  }  
+  cout<<endl;
+*/
+  PreparationArbre(c, angleXY, angleZ, hauteur, poids, contextes, svgGravite);
   // cout << "au revoir de createTreeRankByRankF" << endl;
 }
 
@@ -444,19 +493,30 @@ void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Context
           int k=0;
           while(k<base)
           {
-            //cout<<(*etageF)[k]->getName()<<" ";
+          
             etageSuivant.push_back((*etageF)[k]);
             k++;
           }
           node* enfant;
-          node*test;
+          //cout<<"pere possible :"<<(*etageF)[k]->getName();
+          node*test=(*etageF)[k];
           while (k<(*contextes)[i].getReglesNouvelles().length()+base)
           {
           
             tmpTab[0] = a[k] ;
             tmpTab[1] = '\0';
-            enfant = new node(hauteur, (*etageF)[0]->getInclinaisonXY(), (*etageF)[0]->getInclinaisonZ(), true,tmpTab ,test);  
-            //cout<<(enfant)->getName()<<" ";
+            if ((test->getgravite())|| (*contextes)[i].getGravite())
+            {
+              enfant = new node(hauteur, 180, (*etageF)[0]->getInclinaisonZ(), true,tmpTab ,test);  
+
+            }
+            else
+            {
+              enfant = new node(hauteur, (*etageF)[0]->getInclinaisonXY(), (*etageF)[0]->getInclinaisonZ(), (*contextes)[i].getGravite(),tmpTab ,test);  
+              //cout<<"pour "<<enfant->getName()<< " contexte = "<<(*contextes)[i].getGravite(); 
+              //cout<<"test gravite du pere"<<enfant->getPere()->getName() <<" = "<<enfant->getPere()->getgravite()<<endl;
+            }
+            //cout<<endl<<"Coucou on est ici avec"<< tmpTab<< " et "<<(*contextes)[i].getGravite()<<endl; 
             etageSuivant.push_back(enfant);
             k++;
           }
@@ -584,9 +644,9 @@ bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes
 *************/
 
 // a represente une ligne de caracteres
-void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, double poids, vector<Contexte> *contextes)
+void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, double poids, vector<Contexte> *contextes, vector<bool> *svgGravite)
 {
-  cout<<"entree dans prepration arbre avec a="<<a<<endl;  
+  //cout<<"entree dans prepration arbre avec a="<<a<<endl;  
   vector<node*> etageR; // etages dans la lecture du mot
   //cout << "entree dans preparationArbre avec angleXY=" <<angleXY<<"et angleZ="<<angleZ<< endl;
   int m = 0;
@@ -604,7 +664,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
   char *tmp = new char[2];
   tmp[0] = 'R';
   tmp[1] = '\0';
-  node* racineR = new node(NULL, 0, 0, 0, 90, 0, tmp, poids);
+  node* racineR = new node(NULL, 0, 0, 0, 90, 0, tmp, poids, false);
   // cout << "inclinaisonXY racineR : " << racineR->getInclinaisonXY() << endl;
   etageR.push_back(racineR);
   node* pere = racineR;
@@ -622,7 +682,14 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
       char tmpTab[2];
       tmpTab[0] = a[m];
       tmpTab[1] = '\0';
-      enfant = new node(hauteur, inclinaisonXY, inclinaisonZ, true, tmpTab, pere );
+      if ((pere->getgravite())|| ((*svgGravite).at(m)))
+      {
+        enfant = new node(hauteur, 180, inclinaisonZ, true, tmpTab, pere );
+      }
+      else
+      {
+        enfant = new node(hauteur, inclinaisonXY, inclinaisonZ, false, tmpTab, pere );
+      }
       // cout << "nom de l'enfant" << tmpTab << "nom du pere : " << pere->getName() << endl;
       /*
       cout << " inclinaisonXY enfant " << m << " : " << enfant->getInclinaisonXY()
@@ -639,7 +706,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
         // cout << endl << endl << "2eme cas =" << pere->getName() << endl;
         // cout << "1er test inclinaisonZ = " << inclinaisonZ <<"angle Z="<<angleZ<< endl;
         // cout << "Tandis que inclinaisonXY = " << inclinaisonXY <<"angle XY="<<angleXY<< endl;
-        m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur);
+        m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur, svgGravite);
       }
       if(a[m] == '+')
       {
@@ -684,7 +751,7 @@ void PreparationArbre(string a, double angleXY, double angleZ, double hauteur, d
 *
 ***********/
 //dans les cas des []
-int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY, double angleZ, double inclinaisonZ, double hauteur)
+int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY, double angleZ, double inclinaisonZ, double hauteur, vector<bool> *svgGravite)
 {
   //cout << "bienvenue dans arbre pere avec pere d'une inclinaisonZ de " << pere->getInclinaisonZ() << " et inclinaisonXY = " << inclinaisonXY << endl;
   m++;
@@ -700,7 +767,7 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
     if(a[m] == '[')
     {
       // cout << "dans ce cas inclinaisonXY = " << inclinaisonXY << endl;
-      m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur);
+      m = arbrePere(m, a, pere, angleXY, inclinaisonXY, angleZ, inclinaisonZ, hauteur, svgGravite);
       // cout << "retour de arbrePere avec m = " << m << endl;
     }
     if(a[m] == '+')
@@ -731,7 +798,15 @@ int arbrePere(int m, string a, node* pere, double angleXY, double inclinaisonXY,
       char tmpTab[2];
       tmpTab[0] = a[m];
       tmpTab[1] = '\0';
-      node *enfant = new node(hauteur, inclinaisonXY, inclinaisonZ, true, tmpTab, pere);
+      node *enfant;
+      if ((pere->getgravite())|| ((*svgGravite).at(m)))
+      {
+          enfant = new node(hauteur, 180, inclinaisonZ,true, tmpTab, pere);  
+      }
+      else 
+      {
+        enfant = new node(hauteur, inclinaisonXY, inclinaisonZ,false, tmpTab, pere);
+      }
       /*
       cout << " inclinaisonXY enfant " << m << " : " << enfant->getInclinaisonXY()
            << "avec pere d'une inclinaisonXY de " << pere->getInclinaisonXY() << " et a[m] = " << a[m] << endl;
@@ -749,17 +824,25 @@ lors des premiers axiomes multiples
 ****/
 void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double* angleXY, double* angleZ, vector<node*>*etageF)
 {
+  //cout<<"bienvenue dans premier axiome"<<endl;
   char motRacineF;
   node* racineF;
+  vector<bool> svgGravite;
+  bool f= false;
+  for (unsigned int i=0; i < axiomeDeBase->size(); i++)
+  {
+    svgGravite.push_back(false);
+  }
   // node *racine;
   if(axiomeDeBase->size() == 1)
   {
+
     motRacineF = (*axiomeDeBase)[0];
     char *tmpTabF = new char[2];
     tmpTabF[0] = motRacineF;
     tmpTabF[1] = '\0';
     //cout << "mot tmp = " << tmpTabF << endl;
-    racineF = new node(NULL, 0, 0, 0, 0, 0, tmpTabF, *poids);//sert actuellement a rien
+    racineF = new node(NULL, 0, 0, 0, 0, 0, tmpTabF, *poids, false);//sert actuellement a rien
     etageF->push_back(racineF);
     delete tmpTabF;
   }
@@ -770,7 +853,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
     tmpTabF[0] = motRacineF;
     tmpTabF[1] = '\0';
     // cout << "mot tmp = " << tmpTabF << endl;
-    racineF = new node(NULL, 0, 0, 0, 0, 0, tmpTabF, *poids);
+    racineF = new node(NULL, 0, 0, 0, 0, 0, tmpTabF, *poids, false);
     etageF->push_back(racineF);
     if(axiomeDeBase->size() != 1)
     {
@@ -791,8 +874,9 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
         || ((nom[m] >= 'a') && (nom[m] <= 'z')))
         {
           nom[m+1] = '\0'; m = -1;
-
-          enfant = new node(*hauteur, inclinaisonXY, inclinaisonZ, true, nom, pere );
+          
+          enfant = new node(*hauteur, inclinaisonXY, inclinaisonZ, false, nom, pere );
+          
           //cout << "nom de l'enfant" << nom << "nom du pere : " << pere->getName() << endl;
           pere = enfant;
           etageF->push_back(enfant);
@@ -802,7 +886,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
           if(nom[m] == '[')
           {
             // cout << "1er test inclinaisonXY  = " << inclinaisonXY << endl;
-            m = arbrePere(*hauteur, nom, pere, *angleXY, inclinaisonXY, *angleZ, inclinaisonZ, *poids);
+            m = arbrePere(*hauteur, nom, pere, *angleXY, inclinaisonXY, *angleZ, inclinaisonZ, *poids, &svgGravite);
           }
           if(nom[m] == '+')
           {
@@ -826,7 +910,7 @@ void premierAxiome(string *axiomeDeBase, double* poids, double* hauteur, double*
           }
           nom[m+1] = '\0';
           m = -1;
-          enfant = new node(*hauteur, inclinaisonXY, inclinaisonZ, true, nom, pere );
+          enfant = new node(*hauteur, inclinaisonXY, inclinaisonZ, false, nom, pere );
           //cout << "nom de l'enfant" << nom << "nom du pere : " << pere->getName() << endl;
           pere = enfant;
           etageF->push_back(enfant);
