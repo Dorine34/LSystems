@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   double hauteur;
 
   lectureReglesF(filenameF, &motsP, &reglesP, &contextes, &angleXY, &angleZ, &poids, &hauteur, &axiomeDeBase);
-
+  cout<<endl<<"le poids ="<<poids<<endl;
   cout << endl << "contexte enregistre :" << endl;
   for(unsigned int j  = 0; j < contextes.size(); j++)
   {

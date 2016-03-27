@@ -42,7 +42,7 @@ node::node(node* pere, double x, double y, double z,
   this->enfants = new std::vector<node*>();
 }
 
-node::node(double distance, double angleXY, double angleZ,
+node::node(double poids, double distance, double angleXY, double angleZ,
           bool gravite, char* name, node* pere)
 {
   if(pere != NULL)
@@ -52,7 +52,8 @@ node::node(double distance, double angleXY, double angleZ,
     this->angleXY = angleXY;
     this->angleZ = angleZ;
     this->gravite=gravite;
-    
+    this->poids=poids;
+
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
 
@@ -61,45 +62,11 @@ node::node(double distance, double angleXY, double angleZ,
     setY(this->pere->getY() + passageEn3D * distance * sin(PI * this->angleXY * direction / 180));
     setZ(this->pere->getZ() + distance * sin(PI * this->angleZ * direction / 180));
 
-    // setPoids(this->pere->getPoids()/2);// poids du pere = poids du fils/2
     setInclinaisonXY(this->pere->getInclinaisonXY() + this->angleXY * direction);
     setInclinaisonZ(this->pere->getInclinaisonZ() + this->angleZ * direction);
-    // std::cout << "x=" << (this->x ) << " car passage en 3d="<<cos(PI * this->angleZ * direction / 180) << "cos(0)="<<cos(0)<< " et cos(1)="<<cos(1)<<std::endl;
-    // std::cout << "y=" << (this->y ) << std::endl;
     this->enfants = new std::vector<node*>();
     this->name = NULL;
     this->setName(name);
-    //std::cout << "name=" << (this->name) << " poids=" << (this->poids) << std::endl;
-    //std::cout << "nb de freres=" << this->pere->getEnfants()->size() << std::endl;
-    int nbVraisEnfants = 0;
-    double nouveauPoids = this->pere->getPoids();
-    //std::cout<<"Bonjour, je suis : "<<this->getName() << " Mon pere est" << this->pere->getName()[0] <<"et pese :"<<nouveauPoids<<std::endl;
-     for (unsigned int i = 0; i < this->pere->getEnfants()->size(); ++i)
-    {
-      //std::cout << "Mon frere  " << this->pere->getEnfant(i)->getName()[0];
-      //std::cout << "mes freres sont :";
-      if(((this->pere->getEnfant(i)->getName()[0] > 64) && (this->pere->getEnfant(i)->getName()[0] < 91))
-        || ((this->pere->getEnfant(i)->getName()[0] > 96) && (this->pere->getEnfant(i)->getName()[0] < 123)))
-      {
-        //std::cout<<this->pere->getEnfant(i)->getName()<<"  ";
-        nbVraisEnfants++;
-      }
-      //std::cout<<std::endl<<" J'en ai donc :"<<nbVraisEnfants<<std::endl;
-    }
-
-     for (unsigned int i = 0; i < this->pere->getEnfants()->size(); ++i)
-    {
-
-      if(((this->pere->getEnfant(i)->getName()[0] > 64) && (this->pere->getEnfant(i)->getName()[0] < 91))
-        || ((this->pere->getEnfant(i)->getName()[0] > 96) && (this->pere->getEnfant(i)->getName()[0] < 123)))
-      {
-
-        this->setPoids(nouveauPoids/nbVraisEnfants);
-        // std::cout << this->pere->getEnfant(i)->getName()[0] << " -> "<<this->pere->getEnfant(i)->getPoids() << " ";
-      }
-      // std::cout << "name=" << (this->name) << "pere =" << this->pere->getName() << " poids=" << (this->poids) << std::endl;
-    }
-    // std::cout<<"on a donc dans node(.....) : angle = "<<angle<<" et inclinaison = "<<inclinaison<<std::endl;
   }
   else
   {

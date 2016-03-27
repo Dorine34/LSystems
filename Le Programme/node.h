@@ -14,7 +14,7 @@ class node
 public:
   node();
   node(node*, double, double,double, double, double, char*, double, bool);
-  node(double, double, double, bool, char*, node*);
+  node(double, double, double, double, bool, char*, node*);
   ~node();
 
   node& operator=(const node &n);
