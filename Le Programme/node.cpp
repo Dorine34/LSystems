@@ -92,6 +92,7 @@ node::~node()
 
 node& node::operator=(const node &n)
 {
+  std::cout<<"bienvenue dans copie node !"<<std::endl;
   if(this == &n)
   {
     return *this;
@@ -127,6 +128,7 @@ node& node::operator=(const node &n)
   {
     enfants->push_back(n.enfants->at(i));
   }
+  std::cout<<"node a "<<enfants->size()<< " enfants"<<std::endl;
   return *this;
 }
 
