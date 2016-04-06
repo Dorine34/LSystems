@@ -8,6 +8,7 @@
 #include <cstring>
 #include <iostream>
 
+#include "defines.h"
 
 #include "node.h"
 #include "probabilite.h"
@@ -23,7 +24,7 @@ class arbre
 {
 public:
   arbre();
-  arbre( double, double, int, double, double, double, double,
+  arbre( t_double, t_double, int, t_double, t_double, t_double, t_double,
     vector<node*>, vector<Probabilite>, vector<Contexte>, vector<char>, vector<bool>, string);
 
   ~arbre();
@@ -31,24 +32,24 @@ public:
   arbre& operator=(const arbre &a);
 
 
-  double getOrdonneeRacineX();
-  void setOrdonnneeRacineX(double r);
-  double getOrdonneeRacineZ();
-  void setOrdonnneeRacineZ(double r);
+  t_double getOrdonneeRacineX();
+  void setOrdonnneeRacineX(t_double r);
+  t_double getOrdonneeRacineZ();
+  void setOrdonnneeRacineZ(t_double r);
   int getNbIterations ();
   void setNbIterations (int i);
 
-  double getAngleXY ();
-  void setAngleXY (double a);
+  t_double getAngleXY ();
+  void setAngleXY (t_double a);
 
-  double getAngleZ ();
-  void setAngleZ (double a);
+  t_double getAngleZ ();
+  void setAngleZ (t_double a);
 
-  double getPoids ();
-  void setPoids (double a);
+  t_double getPoids ();
+  void setPoids (t_double a);
 
-  double getHauteur ();
-  void setHauteur (double a);
+  t_double getHauteur ();
+  void setHauteur (t_double a);
 
   vector <node*> getEtageF();
   void setEtageF(vector <node*> n);
@@ -79,15 +80,15 @@ public:
 
   void createTreeRankByRankF();
   void preparationArbre(string a);
-  double puissanceMoins10(double x, int p);
-  int arbrePere(int m, string a, node* pere,  double inclinaisonXY,
-              double inclinaisonZ, double modifPoids);
+  t_double puissanceMoins10(t_double x, int p);
+  int arbrePere(int m, string a, node* pere,  t_double inclinaisonXY,
+              t_double inclinaisonZ, t_double modifPoids);
 
 private:
 
-  double _ordonneeRacineX, _ordonneeRacineZ;
+  t_double _ordonneeRacineX, _ordonneeRacineZ;
   int _nombreIterations;
-  double _angleXY, _angleZ, _poids, _hauteur;
+  t_double _angleXY, _angleZ, _poids, _hauteur;
 
   vector<node*> _etageF;//etages selon le rang de creation du mot
   vector<Probabilite> _reglesP;// contraintes rangees par domaine

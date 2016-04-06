@@ -7,33 +7,31 @@
 #include <vector>
 #include <cstring>
 
-#define PI 3.14159265
-
-typedef double t_double;
+#include "defines.h"
 
 class node
 {
 public:
   node();
-  node(node*, double, double,double, double, double, char*, double, bool);
-  node(double, double, double, double, bool, char*, node*);
+  node(node*, t_double, t_double,t_double, t_double, t_double, char*, t_double, bool);
+  node(t_double, t_double, t_double, t_double, bool, char*, node*);
   ~node();
   /*WIP*/
-  double   DD_X;
-  double   DD_Y;
-  double   DD_Z;
+  t_double   DD_X;
+  t_double   DD_Y;
+  t_double   DD_Z;
 
-  double   EE_X;
-  double   EE_Y;
-  double   EE_Z;
+  t_double   EE_X;
+  t_double   EE_Y;
+  t_double   EE_Z;
 
-  double o_DD_X;
-  double o_DD_Y;
-  double o_DD_Z;
+  t_double o_DD_X;
+  t_double o_DD_Y;
+  t_double o_DD_Z;
 
-  double o_EE_X;
-  double o_EE_Y;
-  double o_EE_Z;
+  t_double o_EE_X;
+  t_double o_EE_Y;
+  t_double o_EE_Z;
 
   void contour(int);
   /**/
@@ -44,27 +42,27 @@ public:
   char* getName();
   void setName(char*);
 
-  double getX();
-  void setX(double);
+  t_double getX();
+  void setX(t_double);
 
-  double getY();
-  void setY(double);
+  t_double getY();
+  void setY(t_double);
 
-  double getZ();
-  void setZ(double);
+  t_double getZ();
+  void setZ(t_double);
 
-  double getInclinaisonXY();
-  void setInclinaisonXY(double);
+  t_double getInclinaisonXY();
+  void setInclinaisonXY(t_double);
 
-  double getInclinaisonZ();
-  void setInclinaisonZ(double);
+  t_double getInclinaisonZ();
+  void setInclinaisonZ(t_double);
 
 
-  double getAngleXY();
-  void setAngleXY(double);
+  t_double getAngleXY();
+  void setAngleXY(t_double);
 
-  double getAngleZ();
-  void setAngleZ(double);
+  t_double getAngleZ();
+  void setAngleZ(t_double);
 
 
   node* getPere();
@@ -75,18 +73,18 @@ public:
   std::vector<node*>* getEnfants();
   void setEnfants(std::vector<node*>*);
 
-  double getPoids();
-  void setPoids(double);
+  t_double getPoids();
+  void setPoids(t_double);
 
   bool getgravite();
   void setgravite(bool);
 
 private:
   char* name;
-  double x, y, z, inclinaisonXY, inclinaisonZ, poids;
+  t_double x, y, z, inclinaisonXY, inclinaisonZ, poids;
   node* pere;
   std::vector<node*> *enfants;
-  double angleXY, angleZ;
+  t_double angleXY, angleZ;
   bool gravite;
 };
 

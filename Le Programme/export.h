@@ -7,9 +7,9 @@
 #include <fstream>
 #include <sstream>
 
-#include "node.h"
+#include "defines.h"
 
-typedef double t_double;
+#include "node.h"
 
 class Export
 {

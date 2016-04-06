@@ -10,8 +10,7 @@
 #include <vector>
 #include <time.h>
 
-#define XMAX 792
-#define YMAX 612
+#include "defines.h"
 
 void affichageGraphique(node* root);
 

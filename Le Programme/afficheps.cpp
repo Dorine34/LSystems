@@ -18,7 +18,7 @@ void afficheVector(node *racine, std::ofstream* output)
 //   *output << std::endl;
 }
 
-double xmi,xma,ymi,yma,coeff,decaX,decaY,centreX,centreY;//xmi plus petit x et xma plus grand (x1:gauche | x2:droite)
+t_double xmi,xma,ymi,yma,coeff,decaX,decaY,centreX,centreY;//xmi plus petit x et xma plus grand (x1:gauche | x2:droite)
 
 void cherche_lgla(node *racine){ //lgla : longueur largeur
   if(racine->getX() < xmi)
@@ -37,7 +37,7 @@ void cherche_lgla(node *racine){ //lgla : longueur largeur
 void coef(node* racine, std::ofstream* output){
   xmi = racine->getX(); xma = racine->getX(); ymi = racine->getY(); yma = racine->getY(); coeff = 1.0;//(Ré)Intialisation des variables globales pour la recherche.
   cherche_lgla(racine);
-  double xtot = xma - xmi, ytot = yma - ymi;
+  t_double xtot = xma - xmi, ytot = yma - ymi;
   if(xtot / XMAX > ytot / YMAX)
   {
     coeff = xtot/XMAX;
@@ -55,8 +55,8 @@ void coef(node* racine, std::ofstream* output){
     // std::cout << "Y : " << (ytot/2)/coeff + decaY << " =? " << YMAX/2 << std::endl;
     // std::cout << "X : " << (xtot/2)/coeff + decaX << " =? " << XMAX/2 << std::endl;
 
-    // double Ycentered = (ytot/2)/coeff + decaY;
-    // double Xcentered = (xtot/2)/coeff + decaX;
+    // t_double Ycentered = (ytot/2)/coeff + decaY;
+    // t_double Xcentered = (xtot/2)/coeff + decaX;
 /*
     *output << lround(YMAX/2) - 5 << " "
             << lround(XMAX/2) << " moveto" << std::endl;
@@ -77,7 +77,7 @@ void coef(node* racine, std::ofstream* output){
 
 /*
 void coef(node *racine, std::ofstream* output){ //Les y(s) ne sont pas encore utilisé
-  double y_min = 0.0, center = YMAX/2; //largeur = 612
+  t_double y_min = 0.0, center = YMAX/2; //largeur = 612
   xma = XMAX; ymi = y_min; yma = YMAX; coeff = 1.0;//(Ré)Intialisation des variables globales pour la recherche.
   cherche_lgla(racine,coeff);
   if(xma > XMAX){   //creer un coeff qui rend égale à la valeur max sur l'axe X

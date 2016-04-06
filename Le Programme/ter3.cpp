@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -20,7 +18,7 @@ int main(int argc, char** argv)
 {
   cout << "Bonjour camarades !" << endl;//message de convivialité (parce que c'est important la convivialite)
   char* filenameF = new char[11];
-  
+
   sprintf(filenameF, "generateur.txt");
 
   /**ouverture du fichier**/
@@ -42,7 +40,7 @@ int main(int argc, char** argv)
   fclose(pFileF);
 
 /****ceci est mes nouveaux rajouts********/
-  arbre* arbre1 =new arbre ();
+  arbre* arbre1 = new arbre ();
   cout<<"definition de l'arbre :"<<endl;
   //cout<<arbre1->toString()<<endl;
   arbre1->lectureReglesF(filenameF);
@@ -62,7 +60,7 @@ int main(int argc, char** argv)
     for(int i = 0; i < arg; ++i)
     {
       arbre1->createTreeRankByRankF();
-      
+
     }
     return 0;
   }
@@ -89,11 +87,11 @@ int main(int argc, char** argv)
     else
     {//cas etage par etage
       arbre1->createTreeRankByRankF();
-     
+
       cout << endl << "Resultat : " << endl ;
       cout << "Appuyez sur une touche pour continuer et quit pour quitter" << endl;
       cin >> saisie;
     }
-  }  
+  }
   return 0;
 }

@@ -25,7 +25,7 @@ arbre::arbre()
 
 }
 
-arbre::arbre( double x, double z, int i, double angleXY, double angleZ , double poids, double hauteur,
+arbre::arbre( t_double x, t_double z, int i, t_double angleXY, t_double angleZ , t_double poids, t_double hauteur,
     vector<node*> etageF, vector<Probabilite> vp, vector<Contexte> c, vector<char> cp, vector<bool> vb, string ax)
 {
   setOrdonnneeRacineX(x);
@@ -66,21 +66,21 @@ arbre& arbre::operator=(const arbre &a)
 }
 
 
-  double arbre::getOrdonneeRacineX()
+  t_double arbre::getOrdonneeRacineX()
   {
     return _ordonneeRacineX;
   }
-  void arbre::setOrdonnneeRacineX(double r)
+  void arbre::setOrdonnneeRacineX(t_double r)
   {
     _ordonneeRacineX=r;
   }
 
 
-  double arbre::getOrdonneeRacineZ()
+  t_double arbre::getOrdonneeRacineZ()
   {
     return _ordonneeRacineZ;
   }
-  void arbre::setOrdonnneeRacineZ(double r)
+  void arbre::setOrdonnneeRacineZ(t_double r)
   {
     _ordonneeRacineZ=r;
   }
@@ -94,38 +94,38 @@ arbre& arbre::operator=(const arbre &a)
     _nombreIterations=i;
   }
 
-  double arbre::getAngleXY ()
+  t_double arbre::getAngleXY ()
   {
     return _angleXY;
   }
-  void arbre::setAngleXY (double a)
+  void arbre::setAngleXY (t_double a)
   {
     _angleXY=a;
   }
 
-  double arbre::getAngleZ ()
+  t_double arbre::getAngleZ ()
   {
     return _angleZ;
   }
-  void arbre::setAngleZ (double a)
+  void arbre::setAngleZ (t_double a)
   {
     _angleZ=a;
   }
 
-  double arbre::getPoids ()
+  t_double arbre::getPoids ()
   {
     return _poids;
   }
-  void arbre::setPoids (double a)
+  void arbre::setPoids (t_double a)
   {
     _poids=a;
   }
 
-  double arbre::getHauteur ()
+  t_double arbre::getHauteur ()
   {
     return _hauteur;
   }
-  void arbre::setHauteur (double a)
+  void arbre::setHauteur (t_double a)
   {
     _hauteur=a;
   }
@@ -213,7 +213,7 @@ arbre& arbre::operator=(const arbre &a)
     setAngleZ(0);
     setAxiomeDeBase("");
 
-    double probabilite = 0;
+    t_double probabilite = 0;
     ifstream file(filenameF);
     if(!file.is_open())
     {
@@ -393,7 +393,7 @@ arbre& arbre::operator=(const arbre &a)
                     cpt++;
                     k++;
                   }
-                  probabilite = puissanceMoins10(probabilite, cpt - 1);// probabilite en double
+                  probabilite = puissanceMoins10(probabilite, cpt - 1);// probabilite en t_double
                   // cout << "La probabilite = " << probabilite << endl;
                   Probabilite p1(probabilite, "");// creation de probabilite
                   probabilite = 0;
@@ -506,7 +506,7 @@ string arbre::toString()
   return a.str();
 }
 
-double arbre::puissanceMoins10(double x, int p)
+t_double arbre::puissanceMoins10(t_double x, int p)
 {
   for(int i = 0; i < p; i++)
   {
@@ -528,10 +528,10 @@ void arbre::createTreeRankByRankF()
          << "de probabilite" << _reglesP[j].getProbabilite() << endl;
   }
   srand(time(NULL));
-  double r = rand()%(10) + 1;
+  t_double r = rand()%(10) + 1;
   r = r/10;
   //cout << "la fonction random r = " << r << endl;
-  double total = 0;
+  t_double total = 0;
   vector<node*> etageSuivant;
   char *tmpTab = new char[2];
   // cout << "je suis ici" << endl;
@@ -724,9 +724,9 @@ void arbre::preparationArbre(string a)
   etageR.push_back(racineR);
   node* pere = racineR;
   node* enfant;
-  double inclinaisonXY = 0;
-  double inclinaisonZ = 0;
-  double modifPoids=0;
+  t_double inclinaisonXY = 0;
+  t_double inclinaisonZ = 0;
+  t_double modifPoids=0;
   // cout << "etape4 franchie" << endl;
   while((a[m]) != '\0')
   {
@@ -801,7 +801,7 @@ void arbre::preparationArbre(string a)
   //contextesLies( racineR, contextes);
 
   affichageGraphique(racineR);
-  Export e(racineR, false);
+  Export e(racineR, true);
   for (unsigned int i = 0; i < etageR.size(); ++i)
   {
     delete etageR.at(i);
@@ -810,7 +810,7 @@ void arbre::preparationArbre(string a)
   // cout << "arbre prepare !" << endl;
 }
 
-int arbre::arbrePere(int m, string a, node* pere,  double inclinaisonXY, double inclinaisonZ, double modifPoids)
+int arbre::arbrePere(int m, string a, node* pere,  t_double inclinaisonXY, t_double inclinaisonZ, t_double modifPoids)
 {
   //cout << "bienvenue dans arbre pere avec pere d'une inclinaisonZ de " << pere->getInclinaisonZ() << " et inclinaisonXY = " << inclinaisonXY << endl;
   m++;
@@ -930,9 +930,9 @@ void arbre::premierAxiome()
       node* enfant;
       int m = 0;
       int n = 0;
-      double inclinaisonXY = 0;
-      double inclinaisonZ = 0;
-      double modifPoids= 0;
+      t_double inclinaisonXY = 0;
+      t_double inclinaisonZ = 0;
+      t_double modifPoids= 0;
       while((unsigned)n < _axiomeDeBase.size())
       {
         nom[m] = _axiomeDeBase[n];

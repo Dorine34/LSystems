@@ -4,16 +4,16 @@
     _regles ="X";
     _probabilite=1;
   }
-  Probabilite::Probabilite(double prob, string regles){
+  Probabilite::Probabilite(t_double prob, string regles){
     _probabilite=prob;
     _regles=regles;
   }
   Probabilite::~Probabilite(){}
 
-  double Probabilite::getProbabilite(){
+  t_double Probabilite::getProbabilite(){
     return _probabilite;
   }
-  void Probabilite::setProbabilite(double prob){
+  void Probabilite::setProbabilite(t_double prob){
     _probabilite=prob;
   }
 
@@ -26,6 +26,6 @@
 
   string Probabilite::toString(){
     ostringstream a;
-    a<<"la sequence"<<_regles<<" a "<<_probabilite<<" chance de tomber"<<endl; 
-    return a.str(); 
+    a<<"la sequence"<<_regles<<" a "<<_probabilite<<" chance de tomber"<<endl;
+    return a.str();
   }

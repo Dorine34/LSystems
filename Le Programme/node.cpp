@@ -15,9 +15,9 @@ node::node()
   this->angleZ = 0;
 }
 
-node::node(node* pere, double x, double y, double z,
-          double inclinaisonXY, double  inclinaisonZ,
-          char* name, double poids, bool gravite)
+node::node(node* pere, t_double x, t_double y, t_double z,
+          t_double inclinaisonXY, t_double  inclinaisonZ,
+          char* name, t_double poids, bool gravite)
 {
   std::cout<<"entree dans node ()"<<std::endl;
   this->angleXY = 0;
@@ -42,7 +42,7 @@ node::node(node* pere, double x, double y, double z,
   this->enfants = new std::vector<node*>();
 }
 
-node::node(double poids, double distance, double angleXY, double angleZ,
+node::node(t_double poids, t_double distance, t_double angleXY, t_double angleZ,
           bool gravite, char* name, node* pere)
 {
   if(pere != NULL)
@@ -57,7 +57,7 @@ node::node(double poids, double distance, double angleXY, double angleZ,
     pere->ajoutEnfant(this);
     int direction = pow(-1, h);
 
-    double passageEn3D = cos(PI * this->angleZ * direction / 180);
+    t_double passageEn3D = cos(PI * this->angleZ * direction / 180);
     setX(this->pere->getX() + passageEn3D * distance * cos(PI * this->angleXY * direction / 180));
     setY(this->pere->getY() + passageEn3D * distance * sin(PI * this->angleXY * direction / 180));
     setZ(this->pere->getZ() + distance * sin(PI * this->angleZ * direction / 180));
@@ -91,16 +91,16 @@ node::~node()
 }
 void node::contour(int fils)
 {
-  double D_X = (getPere()->getX() + getEnfant(fils)->getX()) / 2;
-  double D_Y = (getPere()->getY() + getEnfant(fils)->getY()) / 2;
-  double D_Z = (getPere()->getZ() + getEnfant(fils)->getZ()) / 2;
+  t_double D_X = (getPere()->getX() + getEnfant(fils)->getX()) / 2;
+  t_double D_Y = (getPere()->getY() + getEnfant(fils)->getY()) / 2;
+  t_double D_Z = (getPere()->getZ() + getEnfant(fils)->getZ()) / 2;
 
   /**
     * CALCUL DES COORDONNEES DE D-B
     */
-  double medMinRoot_X = D_X - getX();
-  double medMinRoot_Y = D_Y - getY();
-  double medMinRoot_Z = D_Z - getZ();
+  t_double medMinRoot_X = D_X - getX();
+  t_double medMinRoot_Y = D_Y - getY();
+  t_double medMinRoot_Z = D_Z - getZ();
 
   if (medMinRoot_X == 0 && medMinRoot_Y == 0 && medMinRoot_Z == 0)
   {
@@ -125,7 +125,7 @@ void node::contour(int fils)
     /**
       * CALCUL DE LA NORME DE D-B
       */
-    double norm_medMinRoot = sqrt(pow(D_X - getX(), 2) +
+    t_double norm_medMinRoot = sqrt(pow(D_X - getX(), 2) +
                                   pow(D_Y - getY(), 2) +
                                   pow(D_Z - getZ(), 2));
 
@@ -149,18 +149,18 @@ void node::contour(int fils)
       */
 
     /*E_X : YZ - ZY*/
-    double pv_X = ((getPere()->getY()       - getY())   /*A_Y - B_Y*/
+    t_double pv_X = ((getPere()->getY()       - getY())   /*A_Y - B_Y*/
                 * (getPere()->getZ()        - getZ()))  /*A_Z - B_Z*/
                 - ((getEnfant(fils)->getZ() - getZ())   /*C_Z - B_Z*/
                 * (getEnfant(fils)->getY()  - getY())); /*C_Y - B_Y*/
     /*E_Y : ZX - XZ*/
-    double pv_Y = ((getPere()->getZ()       - getZ())   /*A_Z - B_Z*/
+    t_double pv_Y = ((getPere()->getZ()       - getZ())   /*A_Z - B_Z*/
                 * (getPere()->getX()        - getX()))  /*A_X - B_X*/
                 - ((getEnfant(fils)->getX() - getX())   /*C_X - B_X*/
                 * (getEnfant(fils)->getZ()  - getZ())); /*C_Z - B_Z*/
 
     /*E_Z : XY - YX*/
-    double pv_Z = ((getPere()->getX()       - getX())   /*A_X - B_X*/
+    t_double pv_Z = ((getPere()->getX()       - getX())   /*A_X - B_X*/
                 * (getPere()->getY()        - getY()))  /*A_Y - B_Y*/
                 - ((getEnfant(fils)->getY() - getY())   /*C_Y - B_Y*/
                 * (getEnfant(fils)->getX()  - getX())); /*C_X - B_X*/
@@ -168,14 +168,14 @@ void node::contour(int fils)
     /**
       * CALCUL DES COORDONNEES DE E-B
       */
-    double eMinRoot_X = pv_X - getX();
-    double eMinRoot_Y = pv_Y - getY();
-    double eMinRoot_Z = pv_Z - getZ();
+    t_double eMinRoot_X = pv_X - getX();
+    t_double eMinRoot_Y = pv_Y - getY();
+    t_double eMinRoot_Z = pv_Z - getZ();
 
     /**
       * CALCUL DE LA NORME DE E-B
       */
-    double norm_eMinRoot = sqrt(pow(pv_X - getX(), 2) +
+    t_double norm_eMinRoot = sqrt(pow(pv_X - getX(), 2) +
                                   pow(pv_Y - getY(), 2) +
                                   pow(pv_Z - getZ(), 2));
 
@@ -285,69 +285,69 @@ void node::setName(char* name)
   }
 }
 
-double node::getX()
+t_double node::getX()
 {
   return this->x;
 }
 
-void node::setX(double x)
+void node::setX(t_double x)
 {
   this->x = x;
 }
-double node::getAngleXY()
+t_double node::getAngleXY()
 {
   return this->angleXY;
 }
-void node::setAngleXY(double a)
+void node::setAngleXY(t_double a)
 {
   this->angleXY=a;
 }
 
-double node::getAngleZ()
+t_double node::getAngleZ()
 {
   return this->angleZ;
 }
 
-void node::setAngleZ(double a)
+void node::setAngleZ(t_double a)
 {
   this->angleZ=a;
 }
 
 
-double node::getY(){
+t_double node::getY(){
   return this->y;
 }
 
-void node::setY(double y)
+void node::setY(t_double y)
 {
   this->y = y;
 }
 
-double node::getZ(){
+t_double node::getZ(){
   return this->z;
 }
 
-void node::setZ(double z)
+void node::setZ(t_double z)
 {
   this->z = z;
 }
 
-double node::getInclinaisonXY()
+t_double node::getInclinaisonXY()
 {
   return this->inclinaisonXY;
 }
 
-void node::setInclinaisonXY(double inclinaison)
+void node::setInclinaisonXY(t_double inclinaison)
 {
   this->inclinaisonXY = inclinaison;
 }
 
-double node::getInclinaisonZ()
+t_double node::getInclinaisonZ()
 {
   return this->inclinaisonZ;
 }
 
-void node::setInclinaisonZ(double inclinaison)
+void node::setInclinaisonZ(t_double inclinaison)
 {
   this->inclinaisonZ = inclinaison;
 }
@@ -388,11 +388,11 @@ void node::setEnfants(std::vector<node*> *enfants)
   }
 }
 
-double node::getPoids(){
+t_double node::getPoids(){
   return this->poids;
 }
 
-void node::setPoids(double poids)
+void node::setPoids(t_double poids)
 {
   this->poids = poids;
 }

@@ -7,27 +7,29 @@
 #include <vector>
 #include <cstring>
 #include <sstream>
-using namespace std;
 
+#include "defines.h"
+
+using namespace std;
 
 class Probabilite
 {
 public:
   Probabilite();
-  Probabilite(double, string);
+  Probabilite(t_double, string);
   ~Probabilite();
 
-  double getProbabilite();
-  void setProbabilite(double);
+  t_double getProbabilite();
+  void setProbabilite(t_double);
 
   string getString();
   void setString(string);
-  
+
   string toString();
-  
+
 protected:
   string _regles;
-  double _probabilite;
+  t_double _probabilite;
   };
 
 #endif
