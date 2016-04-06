@@ -99,7 +99,7 @@ std::string Export::exportEdge(node* pere, node* actual, node* fils, int nb)
   oss << exportVertices(actual->o_DD_X, actual->o_DD_Y, actual->o_DD_Z);
   oss << exportVertices(actual->o_EE_X, actual->o_EE_Y, actual->o_EE_Z);
 
-  std::cout << "_____" << std::endl;
+  // std::cout << "_____" << std::endl;
   return oss.str();
 }
 
@@ -114,20 +114,23 @@ std::string Export::exportEdge(node* pere, node* actual, node* fils, int nb)
 std::string Export::exportApex(int pere)
 {
   std::ostringstream oss;
+
+  int firstPere = pere - 3;
+
   for (int i = 0; i < 4; ++i)
   {
     oss << "f "
-        << pere + ((1 + i) % 4)
+        << firstPere + ((1 + i) % 4)
         << "//"
-        << i + pere
+        << i + firstPere
         << " "
-        << i + pere
+        << i + firstPere
         << "//"
-        << last
+        << last - 1
         << " "
-        << last
+        << last - 1
         << "//"
-        << pere + ((1 + i) % 4)
+        << firstPere + ((1 + i) % 4)
         << std::endl;
   }
   return oss.str();
@@ -144,15 +147,16 @@ std::string Export::exportApex(int pere)
 std::string Export::exportTrunk(int pere)
 {
   std::ostringstream oss;
-  int firstTop = last - 3;
+  int firstTop = last - 4;
+  int firstPere = pere - 3;
   for (int i = 0; i < 4; ++i)
   {
     oss << "f "
-        << pere + ((1 + i) % 4)
+        << firstPere + ((1 + i) % 4)
         << "//"
-        << i + pere
+        << i + firstPere
         << " "
-        << i + pere
+        << i + firstPere
         << "//"
         << i + firstTop
         << " "
@@ -162,7 +166,7 @@ std::string Export::exportTrunk(int pere)
         << " "
         << firstTop + ((1 + i) % 4)
         << "//"
-        << pere + ((1 + i) % 4)
+        << firstPere + ((1 + i) % 4)
         << std::endl;
   }
   return oss.str();
@@ -204,16 +208,16 @@ int Export::recurExportTrunk(node* root)
   if(root->getPere() == NULL)
   {
     out << exportRoot(root);
-    last -= 4;
   }
   /**
     * Bloc apex
     */
   if (root->getEnfants()->size() == 0)
   {
+    out << "#ME" << std::endl;
     out << exportVertices(root->getX(), root->getY(), root->getZ());
     // promptXYZ(root->getX(), root->getY(), root->getZ());
-    exportApex(pere);
+    out << exportApex(pere);
   }
   /**
     * Bloc branche
