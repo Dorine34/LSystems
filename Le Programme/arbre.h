@@ -13,6 +13,7 @@
 #include "probabilite.h"
 #include "contexte.h"
 #include "creation.h"
+#include "export.h"
 
 #include <fstream>      // std::ifstream
 
@@ -24,28 +25,28 @@ public:
   arbre();
   arbre( double, double, int, double, double, double, double,
     vector<node*>, vector<Probabilite>, vector<Contexte>, vector<char>, vector<bool>, string);
-  
+
   ~arbre();
 
   arbre& operator=(const arbre &a);
 
-  
-  double getOrdonneeRacineX();  
+
+  double getOrdonneeRacineX();
   void setOrdonnneeRacineX(double r);
   double getOrdonneeRacineZ();
   void setOrdonnneeRacineZ(double r);
   int getNbIterations ();
   void setNbIterations (int i);
-  
+
   double getAngleXY ();
   void setAngleXY (double a);
-  
+
   double getAngleZ ();
   void setAngleZ (double a);
-  
+
   double getPoids ();
   void setPoids (double a);
-  
+
   double getHauteur ();
   void setHauteur (double a);
 
@@ -61,24 +62,24 @@ public:
   void setContexte(vector<Contexte> c);
   void rajoutContexte(Contexte c);
 
-  vector<char> getMotsP();  
+  vector<char> getMotsP();
   void setMotsP(vector<char> m);
   void rajoutMot(char c);
 
   vector<bool> getSvgGravite();
-  void setSvgGravite(vector<bool> s);  
+  void setSvgGravite(vector<bool> s);
   void rajoutGravite(bool s);
-  
+
   string getAxiomeDeBase();
   void setAxiomeDeBase(string ax);
-  
+
   void lectureReglesF(char *filenameF);
   string toString();
   void premierAxiome();
 
   void createTreeRankByRankF();
   void preparationArbre(string a);
-  double puissanceMoins10(double x, int p);  
+  double puissanceMoins10(double x, int p);
   int arbrePere(int m, string a, node* pere,  double inclinaisonXY,
               double inclinaisonZ, double modifPoids);
 
@@ -86,8 +87,8 @@ private:
 
   double _ordonneeRacineX, _ordonneeRacineZ;
   int _nombreIterations;
-  double _angleXY, _angleZ, _poids, _hauteur;  
-  
+  double _angleXY, _angleZ, _poids, _hauteur;
+
   vector<node*> _etageF;//etages selon le rang de creation du mot
   vector<Probabilite> _reglesP;// contraintes rangees par domaine
   vector<Contexte> _contextes;// contexte sensitif

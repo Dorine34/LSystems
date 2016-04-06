@@ -9,6 +9,8 @@
 
 #define PI 3.14159265
 
+typedef double t_double;
+
 class node
 {
 public:
@@ -16,7 +18,25 @@ public:
   node(node*, double, double,double, double, double, char*, double, bool);
   node(double, double, double, double, bool, char*, node*);
   ~node();
+  /*WIP*/
+  double   DD_X;
+  double   DD_Y;
+  double   DD_Z;
 
+  double   EE_X;
+  double   EE_Y;
+  double   EE_Z;
+
+  double o_DD_X;
+  double o_DD_Y;
+  double o_DD_Z;
+
+  double o_EE_X;
+  double o_EE_Y;
+  double o_EE_Z;
+
+  void contour(int);
+  /**/
   node& operator=(const node &n);
 
   void ajoutEnfant(node*);
@@ -45,7 +65,7 @@ public:
 
   double getAngleZ();
   void setAngleZ(double);
-  
+
 
   node* getPere();
   void setPere(node*);
@@ -60,7 +80,7 @@ public:
 
   bool getgravite();
   void setgravite(bool);
-  
+
 private:
   char* name;
   double x, y, z, inclinaisonXY, inclinaisonZ, poids;

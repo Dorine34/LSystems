@@ -89,6 +89,111 @@ node::~node()
     delete this->enfants;
   }
 }
+void node::contour(int fils)
+{
+  double D_X = (getPere()->getX() + getEnfant(fils)->getX()) / 2;
+  double D_Y = (getPere()->getY() + getEnfant(fils)->getY()) / 2;
+  double D_Z = (getPere()->getZ() + getEnfant(fils)->getZ()) / 2;
+
+  /**
+    * CALCUL DES COORDONNEES DE D-B
+    */
+  double medMinRoot_X = D_X - getX();
+  double medMinRoot_Y = D_Y - getY();
+  double medMinRoot_Z = D_Z - getZ();
+
+  if (medMinRoot_X == 0 && medMinRoot_Y == 0 && medMinRoot_Z == 0)
+  {
+      DD_X = getX() + getPere()-> DD_X - getPere()->getX();
+      DD_Y = getY() + getPere()-> DD_Y - getPere()->getY();
+      DD_Z = getZ() + getPere()-> DD_Z - getPere()->getZ();
+
+    o_DD_X = getX() + getPere()->o_DD_X - getPere()->getX();
+    o_DD_Y = getY() + getPere()->o_DD_Y - getPere()->getY();
+    o_DD_Z = getZ() + getPere()->o_DD_Z - getPere()->getZ();
+
+      EE_X = getX() + getPere()->  EE_X - getPere()->getX();
+      EE_Y = getY() + getPere()->  EE_Y - getPere()->getY();
+      EE_Z = getZ() + getPere()->  EE_Z - getPere()->getZ();
+
+    o_EE_X = getX() + getPere()->o_EE_X - getPere()->getX();
+    o_EE_Y = getY() + getPere()->o_EE_Y - getPere()->getY();
+    o_EE_Z = getZ() + getPere()->o_EE_Z - getPere()->getZ();
+  }
+  else
+  {
+    /**
+      * CALCUL DE LA NORME DE D-B
+      */
+    double norm_medMinRoot = sqrt(pow(D_X - getX(), 2) +
+                                  pow(D_Y - getY(), 2) +
+                                  pow(D_Z - getZ(), 2));
+
+    /**
+      * CALCUL DE DD
+      */
+    DD_X = getX() + (medMinRoot_X/norm_medMinRoot) * getPoids();
+    DD_Y = getY() + (medMinRoot_Y/norm_medMinRoot) * getPoids();
+    DD_Z = getZ() + (medMinRoot_Z/norm_medMinRoot) * getPoids();
+
+    /**
+      * CALCUL DE L'OPPOSE DE DD
+      */
+    o_DD_X = getX() - (medMinRoot_X/norm_medMinRoot) * getPoids();
+    o_DD_Y = getY() - (medMinRoot_Y/norm_medMinRoot) * getPoids();
+    o_DD_Z = getZ() - (medMinRoot_Z/norm_medMinRoot) * getPoids();
+
+    /**
+      * CALCUL DU PRODUIT VECTORIEL : A-B ^ C-B
+      * Resultat : COORDONEES DE E
+      */
+
+    /*E_X : YZ - ZY*/
+    double pv_X = ((getPere()->getY()       - getY())   /*A_Y - B_Y*/
+                * (getPere()->getZ()        - getZ()))  /*A_Z - B_Z*/
+                - ((getEnfant(fils)->getZ() - getZ())   /*C_Z - B_Z*/
+                * (getEnfant(fils)->getY()  - getY())); /*C_Y - B_Y*/
+    /*E_Y : ZX - XZ*/
+    double pv_Y = ((getPere()->getZ()       - getZ())   /*A_Z - B_Z*/
+                * (getPere()->getX()        - getX()))  /*A_X - B_X*/
+                - ((getEnfant(fils)->getX() - getX())   /*C_X - B_X*/
+                * (getEnfant(fils)->getZ()  - getZ())); /*C_Z - B_Z*/
+
+    /*E_Z : XY - YX*/
+    double pv_Z = ((getPere()->getX()       - getX())   /*A_X - B_X*/
+                * (getPere()->getY()        - getY()))  /*A_Y - B_Y*/
+                - ((getEnfant(fils)->getY() - getY())   /*C_Y - B_Y*/
+                * (getEnfant(fils)->getX()  - getX())); /*C_X - B_X*/
+
+    /**
+      * CALCUL DES COORDONNEES DE E-B
+      */
+    double eMinRoot_X = pv_X - getX();
+    double eMinRoot_Y = pv_Y - getY();
+    double eMinRoot_Z = pv_Z - getZ();
+
+    /**
+      * CALCUL DE LA NORME DE E-B
+      */
+    double norm_eMinRoot = sqrt(pow(pv_X - getX(), 2) +
+                                  pow(pv_Y - getY(), 2) +
+                                  pow(pv_Z - getZ(), 2));
+
+    /**
+      * CALCUL DE EE
+      */
+    EE_X = getX() + (eMinRoot_X/norm_eMinRoot) * getPoids();
+    EE_Y = getY() + (eMinRoot_Y/norm_eMinRoot) * getPoids();
+    EE_Z = getZ() + (eMinRoot_Z/norm_eMinRoot) * getPoids();
+
+    /**
+      * CALCUL DE L'OPPOSE DE EE
+      */
+    o_EE_X = getX() - (eMinRoot_X/norm_eMinRoot) * getPoids();
+    o_EE_Y = getY() - (eMinRoot_Y/norm_eMinRoot) * getPoids();
+    o_EE_Z = getZ() - (eMinRoot_Z/norm_eMinRoot) * getPoids();
+  }
+}
 
 node& node::operator=(const node &n)
 {
@@ -106,7 +211,7 @@ node& node::operator=(const node &n)
   this->angleXY = n.angleXY;
   this->angleZ = n.angleZ;
   this->gravite = n.gravite;
-  
+
   if(name != NULL)
   {
     delete name;
@@ -151,9 +256,9 @@ void node::ajoutEnfant(node* enfant)
 
 void node::voirEnfant()
 {
-  for (int i=0; i<(*enfants).size(); i++)
+  for (unsigned int i=0; i<enfants->size(); i++)
   {
-    std::cout<<(*enfants)[i]->getName()<<" ";
+    std::cout << (*enfants)[i]->getName() << " ";
   }
   std::cout<<std::endl;
 }
@@ -200,7 +305,7 @@ void node::setAngleXY(double a)
 
 double node::getAngleZ()
 {
-  return this->angleZ; 
+  return this->angleZ;
 }
 
 void node::setAngleZ(double a)

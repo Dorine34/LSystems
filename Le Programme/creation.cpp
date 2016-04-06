@@ -7,7 +7,7 @@ void insereRN(string &a, int base, vector<Contexte> * contextes, int i)
   string Ainserer=(*contextes)[i].getReglesNouvelles();
   //cout<< "a inserer="<<Ainserer << endl;
   ostringstream o;
-  for (unsigned int i=0; i<base; i++)
+  for (int i=0; i<base; i++)
   {
     o<<a[i];
   }
@@ -15,7 +15,7 @@ void insereRN(string &a, int base, vector<Contexte> * contextes, int i)
   {
     o<<Ainserer[i];
   }
-  
+
   for (unsigned int i=base+1; i<a.length(); i++)
   {
     o<<a[i];
@@ -37,10 +37,10 @@ void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Context
       if (((*contextes)[i].getReglesAnciennes()).length()==1)
       {
         //cout<<"cas où regles anciennes ==1";
-        //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());        
+        //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());
         //cout<<"Dans contextes :(*contextes)[i].getPosDuCaractere()+cpt-2="<<(*contextes)[i].getPosDuCaractere()+cpt-2<<endl;
         insereRN(a,base,contextes,i);
-      } 
+      }
       else
       {
         cpt++;
@@ -50,8 +50,8 @@ void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Context
         {
           //cout<<endl<<"YOUPI,cpt="<<cpt<<" et base="<< base<<endl;
           //cout<<"Remplacement de"<<a[base]<< " au niveau :"<<base<<endl;
-          //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());        
-          insereRN(a,base,contextes,i);  
+          //a.replace(base,(*contextes)[i].getReglesNouvelles().length(),(*contextes)[i].getReglesNouvelles());
+          insereRN(a,base,contextes,i);
           //cout<<"a apres remplacement"<<a<<" et base2="<<base<<endl;
           /*
           cout<<"cas1: base="<<base<<endl;
@@ -63,35 +63,35 @@ void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Context
           int k=0;
           while(k<base)
           {
-          
+
             etageSuivant.push_back((*etageF)[k]);
             k++;
           }
           node* enfant;
           //cout<<"pere possible :"<<(*etageF)[k]->getName();
           node*test=(*etageF)[k];
-          while (k<(*contextes)[i].getReglesNouvelles().length()+base)
+          while ((unsigned)k < (*contextes)[i].getReglesNouvelles().length()+base)
           {
-          
+
             tmpTab[0] = a[k] ;
             tmpTab[1] = '\0';
             if ((test->getgravite())|| (*contextes)[i].getGravite())
             {
-              enfant = new node((*etageF)[0]->getPoids(), hauteur, 180, (*etageF)[0]->getInclinaisonZ(), true,tmpTab ,test);  
+              enfant = new node((*etageF)[0]->getPoids(), hauteur, 180, (*etageF)[0]->getInclinaisonZ(), true,tmpTab ,test);
 
             }
             else
             {
-              enfant = new node((*etageF)[0]->getPoids(), hauteur, (*etageF)[0]->getInclinaisonXY(), (*etageF)[0]->getInclinaisonZ(), (*contextes)[i].getGravite(),tmpTab ,test);  
-              //cout<<"pour "<<enfant->getName()<< " contexte = "<<(*contextes)[i].getGravite(); 
+              enfant = new node((*etageF)[0]->getPoids(), hauteur, (*etageF)[0]->getInclinaisonXY(), (*etageF)[0]->getInclinaisonZ(), (*contextes)[i].getGravite(),tmpTab ,test);
+              //cout<<"pour "<<enfant->getName()<< " contexte = "<<(*contextes)[i].getGravite();
               //cout<<"test gravite du pere"<<enfant->getPere()->getName() <<" = "<<enfant->getPere()->getgravite()<<endl;
             }
-            //cout<<endl<<"Coucou on est ici avec"<< tmpTab<< " et "<<(*contextes)[i].getGravite()<<endl; 
+            //cout<<endl<<"Coucou on est ici avec"<< tmpTab<< " et "<<(*contextes)[i].getGravite()<<endl;
             etageSuivant.push_back(enfant);
             k++;
           }
-          
-          while (k<(*contextes)[i].getReglesNouvelles().length()+(*etageF).size()-1)
+
+          while ((unsigned)k < (*contextes)[i].getReglesNouvelles().length()+(*etageF).size()-1)
           {
             //cout<<(*etageF)[k-(*contextes)[i].getReglesNouvelles().length()+1]->getName()<<" ";
             etageSuivant.push_back((*etageF)[k-(*contextes)[i].getReglesNouvelles().length()+1]);
@@ -104,7 +104,7 @@ void rechercheContextes(vector<node*> *etageF,string& a, int cpt, vector<Context
           {
             etageSuivant[i]->setPere(etageSuivant[i-1]);
             etageF->push_back(etageSuivant.at(i));
-          }          
+          }
           /***/
           base=1;
         }
@@ -117,9 +117,9 @@ bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes
 {
   //cout<<"Bienvenue dans verificationContexteString avec "<<a[cpt]<<"base="<<(*base)<< ", cpt="<< cpt<< "et RA= "<< (*contextes)[i].getReglesAnciennes()[j]<< "et j="<< j<<endl;
   //(*base)=j;
-  while (cpt<a.length())
+  while ((unsigned)cpt < a.length())
   {
-    if (j==(*contextes)[i].getReglesAnciennes().length())
+    if ((unsigned)j==(*contextes)[i].getReglesAnciennes().length())
     {
       return true;
     }
@@ -130,7 +130,7 @@ bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes
       if ( (a[cpt]==(*contextes)[i].getReglesAnciennes()[j]))
       {
         //cout<<"cpt="<< cpt<<", base="<<(*base)<<"j="<<j<<" et position du caractere="<<(*contextes)[i].getPosDuCaractere()<<endl;
-        
+
         if ((*contextes)[i].getPosDuCaractere()>(*base))
         {
           //cout<<endl<<"base  ("<<(*base)<<"<"<<(*contextes)[i].getPosDuCaractere()<<"donc base augmente de 1"<<endl;
@@ -141,7 +141,7 @@ bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes
           //cout<<"base a le bon nombre de lettre donc base= cpt)"<<cpt<<endl;;
           (*base)=cpt;
         }
-      
+
         //cout<<"c'est la même lettre !"<<endl;
         j++;
         cpt++;
@@ -161,7 +161,7 @@ bool verificationContexteString (string &a,int cpt, vector<Contexte> * contextes
         if( verificationContexteString(a,cpt, contextes,i,j, base))
         {
           //cout<<endl<<"YOUPI ca marche ! (cpt="<<cpt<<" et base="<<(*base)<<endl;
-          return true; 
+          return true;
         }
         else
         {

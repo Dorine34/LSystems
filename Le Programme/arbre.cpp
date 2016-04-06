@@ -13,7 +13,7 @@ arbre::arbre()
   vector<Probabilite> vp;
   vector<Contexte> c;
   vector<bool> vb;
-  vector<char> cp;  
+  vector<char> cp;
   vector<node*> etageF;
 
   setReglesP(vp);
@@ -24,7 +24,7 @@ arbre::arbre()
   setContexte(c);
 
 }
-  
+
 arbre::arbre( double x, double z, int i, double angleXY, double angleZ , double poids, double hauteur,
     vector<node*> etageF, vector<Probabilite> vp, vector<Contexte> c, vector<char> cp, vector<bool> vb, string ax)
 {
@@ -48,7 +48,7 @@ arbre::~arbre(){}
 
 arbre& arbre::operator=(const arbre &a)
 {
-  
+
   setOrdonnneeRacineX(a._ordonneeRacineX);
   setOrdonnneeRacineZ(a._ordonneeRacineZ);
   setNbIterations (a._nombreIterations);
@@ -65,7 +65,7 @@ arbre& arbre::operator=(const arbre &a)
   return *this;
 }
 
-  
+
   double arbre::getOrdonneeRacineX()
   {
     return _ordonneeRacineX;
@@ -73,7 +73,7 @@ arbre& arbre::operator=(const arbre &a)
   void arbre::setOrdonnneeRacineX(double r)
   {
     _ordonneeRacineX=r;
-  }  
+  }
 
 
   double arbre::getOrdonneeRacineZ()
@@ -102,7 +102,7 @@ arbre& arbre::operator=(const arbre &a)
   {
     _angleXY=a;
   }
-  
+
   double arbre::getAngleZ ()
   {
     return _angleZ;
@@ -111,7 +111,7 @@ arbre& arbre::operator=(const arbre &a)
   {
     _angleZ=a;
   }
-  
+
   double arbre::getPoids ()
   {
     return _poids;
@@ -120,7 +120,7 @@ arbre& arbre::operator=(const arbre &a)
   {
     _poids=a;
   }
-  
+
   double arbre::getHauteur ()
   {
     return _hauteur;
@@ -173,7 +173,7 @@ arbre& arbre::operator=(const arbre &a)
   vector<char> arbre::getMotsP()
   {
     return _motsP;
-  }  
+  }
   void arbre::setMotsP(vector<char> m)
   {
     _motsP=m;
@@ -191,7 +191,7 @@ arbre& arbre::operator=(const arbre &a)
   void arbre::setSvgGravite(vector<bool> s)
   {
     _svgGravite= s;
-  }  
+  }
   void arbre::rajoutGravite(bool s)
   {
     _svgGravite.push_back(s);
@@ -227,7 +227,7 @@ arbre& arbre::operator=(const arbre &a)
     bool poidsArbreFait = false;
     bool longueurBrancheFait = false;
     bool contexteFait = false;
-    
+
   while(getline(file, line))
   {
     b = false;
@@ -291,7 +291,7 @@ arbre& arbre::operator=(const arbre &a)
                   //*hauteur = (*hauteur) * 10 + line[k] - 48;
                 }
                 if(line[k] == '.')
-                {    
+                {
                   longueurBrancheFait = true;
                   cout << "hauteur=" << getHauteur() << endl;
                   //cout << "hauteur=" << *hauteur << endl;
@@ -457,7 +457,7 @@ arbre& arbre::operator=(const arbre &a)
     //cout << "la ligne oubliee selon  5 est" << line << endl;
   }
    //cout << "fin lecture reglesF" << endl;
-  file.close();  
+  file.close();
   //cout << "le fichier s'est ferme avec succes" << endl;
 }
 
@@ -472,12 +472,12 @@ string arbre::toString()
   <<"_poids : "<< _poids<<endl
   <<"_hauteur"<< _hauteur<<endl
   <<"etageF :"<<endl;
-  
-  for (int i=0; i<_etageF.size(); i++)
+
+  for (unsigned int i=0; i<_etageF.size(); i++)
   {
     a<<_etageF[i]->getName()<<" ";
   }
-  
+
   a<<endl<<" reglesP :"<<endl;
   for (unsigned int i=0; i<_reglesP.size(); i++)
   {
@@ -496,13 +496,13 @@ string arbre::toString()
     a<<_motsP[i]<<" ";
   }
 
-  a<<endl<<"svg gravite :"<<endl;  
+  a<<endl<<"svg gravite :"<<endl;
   for (unsigned int i=0; i<_svgGravite.size(); i++)
   {
     a<<_svgGravite[i]<<" ";
   }
   a<<endl<<"axiomeDeBase : "<<_axiomeDeBase<<endl;
-  
+
   return a.str();
 }
 
@@ -647,7 +647,7 @@ void arbre::createTreeRankByRankF()
         {
           enfant = new node(_etageF.at(i)->getPoids(), _hauteur, _etageF.at(i)->getInclinaisonXY(), _etageF.at(i)->getInclinaisonZ(), false,
                                 tmpTab, _etageF.at(i)->getPere());
-        } 
+        }
         etageSuivant.push_back(enfant);
       }
     }
@@ -692,7 +692,7 @@ void arbre::createTreeRankByRankF()
   for(unsigned int i = 0; i < _etageF.size(); ++i)
   {
     cout<<_svgGravite.at(i);
-  }  
+  }
   cout<<endl;
 */
   preparationArbre(c);
@@ -701,7 +701,7 @@ void arbre::createTreeRankByRankF()
 
 void arbre::preparationArbre(string a)
 {
-  //cout<<"entree dans prepration arbre avec a="<<a<<endl;  
+  //cout<<"entree dans prepration arbre avec a="<<a<<endl;
   vector<node*> etageR; // etages dans la lecture du mot
   //cout << "entree dans preparationArbre avec angleXY=" <<_angleXY<<"et angleZ="<<_angleZ<< endl;
   int m = 0;
@@ -801,7 +801,7 @@ void arbre::preparationArbre(string a)
   //contextesLies( racineR, contextes);
 
   affichageGraphique(racineR);
-  exportObj(racineR);
+  Export e(racineR, false);
   for (unsigned int i = 0; i < etageR.size(); ++i)
   {
     delete etageR.at(i);
@@ -870,9 +870,9 @@ int arbre::arbrePere(int m, string a, node* pere,  double inclinaisonXY, double 
       node *enfant;
       if ((pere->getgravite())|| (_svgGravite.at(m)))
       {
-          enfant = new node(_poids, _hauteur, 180, inclinaisonZ,true, tmpTab, pere);  
+          enfant = new node(_poids, _hauteur, 180, inclinaisonZ,true, tmpTab, pere);
       }
-      else 
+      else
       {
         enfant = new node(_poids, _hauteur, inclinaisonXY, inclinaisonZ,false, tmpTab, pere);
       }
@@ -941,9 +941,9 @@ void arbre::premierAxiome()
         || ((nom[m] >= 'a') && (nom[m] <= 'z')))
         {
           nom[m+1] = '\0'; m = -1;
-          
+
           enfant = new node(_poids, _hauteur, inclinaisonXY, inclinaisonZ, false, nom, pere );
-          
+
           //cout << "nom de l'enfant" << nom << "nom du pere : " << pere->getName() << endl;
           pere = enfant;
           _etageF.push_back(enfant);
